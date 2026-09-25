@@ -1,0 +1,13 @@
+# competition data (large, not ours to redistribute)
+*.zip
+student_resource/dataset/
+# generated artefacts
+student_resource/cache/
+student_resource/output/*.tsv
+*_submission.zip
+# python
+__pycache__/
+*.pyc
+# OS
+.DS_Store
+Thumbs.db
