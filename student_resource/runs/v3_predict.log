@@ -1,0 +1,21 @@
+[   108s] 63846924 test pairs, 7262014 with stage-1 P >= 0.01
+[    758s]   features 1000000/1000000
+[   759s]   stage-1 features 1000000/7262014
+[    794s]   features 1000000/1000000
+[   795s]   stage-1 features 2000000/7262014
+[    830s]   features 1000000/1000000
+[   830s]   stage-1 features 3000000/7262014
+[    866s]   features 1000000/1000000
+[   866s]   stage-1 features 4000000/7262014
+[    904s]   features 1000000/1000000
+[   904s]   stage-1 features 5000000/7262014
+[    940s]   features 1000000/1000000
+[   940s]   stage-1 features 6000000/7262014
+[    977s]   features 1000000/1000000
+[   977s]   stage-1 features 7000000/7262014
+[   1004s]   features 262014/262014
+[  1004s]   stage-1 features 7262014/7262014
+[  1080s] context done
+[  1661s] sibling features done
+[  1697s] stage-2 predicted
+[  2061s] test: 5452731 matched pairs written; {'t_first': 0.533, 't_add': 0.794, 'pred_pairs': 5452731, 'pred_singleton_fraction': 0.06398336781057223, 'pred_singleton_fraction_by_country': {'France': 0.06544563156190741, 'India': 0.06655794050761377, 'US': 0.06026638275026919}, 'mean_pred_matches_by_country': {'France': 3.042767062886391, 'India': 3.0925559207196174, 'US': 3.2549124875962514}}

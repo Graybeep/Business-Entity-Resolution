@@ -1,0 +1,16 @@
+{
+  "t_first": 0.533,
+  "t_add": 0.794,
+  "pred_pairs": 5452731,
+  "pred_singleton_fraction": 0.06398336781057223,
+  "pred_singleton_fraction_by_country": {
+    "France": 0.06544563156190741,
+    "India": 0.06655794050761377,
+    "US": 0.06026638275026919
+  },
+  "mean_pred_matches_by_country": {
+    "France": 3.042767062886391,
+    "India": 3.0925559207196174,
+    "US": 3.2549124875962514
+  }
+}
