@@ -1,0 +1,5 @@
+[     7s] 32294283 pairs, 3879557 with stage-1 P >= 0.01 (pos 2965389 of 2968168)
+[   548s] stage-2 matrix (3879557, 90)
+[   953s] SHIFT held-out India: retuned stage1 0.95673 -> stage2(trained on US) 0.95949 | with US thresholds: stage1 0.95669 -> stage2 0.95855
+[  1352s] SHIFT held-out US: retuned stage1 0.97510 -> stage2(trained on India) 0.97683 | with India thresholds: stage1 0.97508 -> stage2 0.97662
+[  1449s] saved cache/v3_stage2_model.txt; top features: p1, p1_rec_max, p1_rec_n_hi, p1_rec_best_other, p1_s1_gap, sib_pmass, num_contained, sib_num_eq_frac, p1_rec_sum, sib_num_jacc_max, sib_addr_max, p1_s1_sum

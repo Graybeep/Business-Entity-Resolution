@@ -1,0 +1,15 @@
+[     7s] 32294283 pairs, 3879557 with stage-1 P >= 0.01 (pos 2965389 of 2968168)
+[   293s] sibling features: ['sib_n', 'sib_pmass', 'sib_name_max', 'sib_name_wmean', 'sib_addr_max', 'sib_addr_wmean', 'sib_num_jacc_max', 'sib_num_jacc_wmean', 'sib_num_eq_frac', 'sib_num_supported_by_s1']
+[   545s] stage-1 features loaded: (3879557, 67)
+[   545s] arm stage2_ctx
+[   591s]     fold 0: best_iter=355 logloss=0.07797
+[   637s]     fold 1: best_iter=387 logloss=0.07791
+[   684s]     fold 2: best_iter=387 logloss=0.07831
+[   730s]     fold 3: best_iter=404 logloss=0.07874
+[   775s]     fold 4: best_iter=386 logloss=0.07847
+[   776s] arm stage2_ctx_sib
+[   871s]     fold 0: best_iter=589 logloss=0.06841
+[   989s]     fold 1: best_iter=562 logloss=0.06855
+[  1083s]     fold 2: best_iter=614 logloss=0.06911
+[  1177s]     fold 3: best_iter=512 logloss=0.06935
+[  1297s]     fold 4: best_iter=581 logloss=0.06943

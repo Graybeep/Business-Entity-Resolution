@@ -1,0 +1,87 @@
+India true pairs (40% S1): 1224841, blocking recall 0.9486, missed 62970
+
+                    missed    found(sample)
+name_tset            74.714    89.149
+name_ratio           75.760    87.039
+addr_tset            81.126    95.149
+phon_eq               0.415     0.612
+r_addr_empty          0.208     0.030
+r_nonlatin_name       0.453     0.166
+r_nonlatin_addr       0.198     0.226
+r_core_empty          0.000     0.000
+num_overlap           0.905     0.975
+src3                  0.576     0.513
+name_tset < 50: missed 0.144  found 0.053
+name_tset < 70: missed 0.386  found 0.156
+name_tset < 90: missed 0.666  found 0.305
+
+missed pair categories:
+non-latin name          0.453
+name close (>=90)       0.307
+name far (<70)          0.143
+name partial (70-90)    0.096
+
+missed with name>=90: record core shared by >=5 India S1: 0.449
+
+--- non-latin name (n=28542) ---
+                           s1_name                               r_name                                                                                                                 s1_addr                                       r_addr      tset
+      Ram Products Private Limited      राम प्रोडक्ट्स प्राइवेट लिमिटेड                                                 A-1, Indira Palace, Near Gaurav Tower, Malviya Nagar, Jaipur, Rajasthan SAWAI MADHOPUR, N/A, Rajasthan, PLOT 423 A-1 83.333333
+               Good Global Pvt Ltd       గుడ్ గ్లోబల్ ప్రైవేట్ లిమిటెడ్                                                                 Plot No2-65, Arka Jewel Khajaguda, Hyderabad, Telangana  Plnt No2-65, Hyderabad Urban, Hyderabad, TG 85.714286
+Laxmi Technologies Private Limited लक्ष्मी टेक्नोलॉजीज प्राइवेट लिमिटेड                                               Plot No D- 50, Midc, Ranjangaon, Taluka Shirur, Shirur, Pune, Maharashtra              Plto No D- 50, Shirur, Pune, MH 66.666667
+       Premier Consultants Pvt Ltd       प्रीमियर कंसल्टेंट्स प्रा. लि.                                   Shop No-1, Plot Number - 2, Vidyavihar Gangapur, Yashoda Nagar, Kanpur, Uttar Pradesh SHOP NO-##1, JHUNJHUNU, KANPUR, उत्तर प्रदेश 66.666667
+  Gujarat Products Private Limited   ગુજરાત પ્રોડક્ટ્સ પ્રાઇવેટ લિમિટેડ                                   A P : Mota Borasra, Tal Mangrol Village Mota Borasara, Taluka Mangrol, Surat, Gujarat    Gujarat, SURAT, A P : MOTA BORASRA, SURAT 87.500000
+    Ss Consultants Private Limited    एसएस कंसल्टेंट्स प्राइवेट लिमिटेड                                 H.No-59, F/F, Pvt. Flat No B-1 Block-Z, Commercial Enclave, Na, Delhi, New Delhi, Delhi             H.NO-A-59, DELHI, MATIALA, Delhi 46.666667
+      Alpha Energy Private Limited        अल्फा एनर्जी प्राइवेट लिमिटेड H.No. 7 &8A, Kh No.33/8, Upper 3Rd Floor Gali No. 12, Vikash Vihar, Chaner Vihar, Nilothi Ext, Delhi, West Delhi, Delhi             Delhi, H.NO. ##7 &8A, WEST DELHI 75.000000
+                     Best Infotech                         Best ইনফোটেক                                                  7 C R Avenue Laha Paint House, 1St Floor, Kolkata, Howrah, West Bengal                                              74.074074
+
+--- name far (<70) (n=9021) ---
+                            s1_name                       r_name                                                                                                    s1_addr                                             r_addr      tset
+            City Management Pvt Ltd        City Pvt Ltd Services 5Th Floor, Survey No 58/1/S, Bima Nagar Colony, Karmanghat Village, Saroornagar, K.V.Rangareddy, Telangana                          Hyderabad, Floor, తెలంగాణ 50.000000
+  Krishna Investmentcompany Limited  krishnainvestmentcompanycom                                     Senguttuvan Street, Tamil Nadu, Somavarakulam, No.16/1, Tiruvannamalai                    H.no 0016/1, Tiruvannamalai, TN 65.384615
+                    Jds Industry Co           Mr jdsindustry.com                                    11, Lajpat Nagar-Iv, Basement, Ring Road, New Delhi, South Delhi, Delhi                            दिल्ली, 11, South Delhi 62.068966
+   Overtop Hospital Private Limited          overtophospital.com                     15/B, Surya Mandir Co. Op. Housing Soc Nr. Devi Mata Mandir, Vatva, Ahmedabad, Gujarat                              0015/B, Ahmedabad, GJ 51.612903
+      Good Producer Private Limited GOOD  PRIVATE LIMITED CENTER                                             Shop No. 46 Near Bishnoi Mandir Market, Hisar, Hissar, Haryana                                                    66.666667
+               Risen Realty Limited             ... @rísenrealty                                               41, Matheswartola Road Kolkata, Kolkata, Howrah, West Bengal                            41, Howrah, Kolkata, WB 52.173913
+Wings (India) Micro Private Limited          Wingsindiamicro.Com                                         C/O Ashok Gopal Prasad, Govardhan Get Kumher, Bharatpur, Rajasthan Plot 2 C/o Ashok Gopal Prasad, Bharatpur, राजस्थान 62.500000
+   Yamuaya Builders Private Limited           yamuayabuilderscom                                   C-127-A, Kh No- 17/23, 24/3, Block-C, Ist Floor, North East Delhi, Delhi                       C-27-a, North East Delhi, DL 52.941176
+
+--- name close (>=90) (n=19344) ---
+                           s1_name                                r_name                                                                                            s1_addr                          r_addr  tset
+            Ram Consulting Limited                    RAM CONSULTING LTD                          Sco-2, Jandpur Road, Park View Market, Village Desu Majra, Mohali, Punjab                                 100.0
+      All Producer Private Limited      All Producer Private Enterprises                                                 87A, Sarat Bose Road, Kolkata, Howrah, West Bengal                                 100.0
+      Ace Products Private Limited          Private Ace Products Limited                           1409 A, First Floor Gali No-13, Govindpuri, Kalka Ji, South Delhi, Delhi      409 A, SOUTH DELHI, दिल्ली 100.0
+      Cloud Clinic Private Limited            Cloud Cloud Clinic Prívate                                       Office No. 301, Lalwani Icon, Sakore Naga, Pune, Maharashtra        Office No. 301, Pune, MH 100.0
+Adodara Foundation Private Limited    Límited Adodara Foundation Private   Plot No. 10, Block No 300/301, Dayabhai Sarpanch Ni Wadi, Tatithaiya, K, Adodara, Surat, Gujarat GJ, Polt No. 10, Adodara, Surat 100.0
+               Sun Investments LLP                   Sun LLP Investments                              Ahata Kaptan, Habibpur, Near Shiv Mandir Gali, Sitapur, Uttar Pradesh                                 100.0
+        Connect Enterprises Center Dr Connect Enterprises-Center Company                     H No A 16 Main Gali Third Floor Masood Pur, New Delhi, South West Delhi, Delhi                                 100.0
+      UZQ Infotech Private Limited          UZQ Infotech Private Limited 24/24C Kavarana Buildingopp Mangatram Weigh Bridge P D Mello Road Wadi Bunder, Mumbai, Maharashtra                                 100.0
+
+--- name partial (70-90) (n=6063) ---
+                                    s1_name                                       r_name                                                                                                                           s1_addr                                                    r_addr      tset
+      Sanjivani Productions Private Limited              productionssanjivaniprivate.com 305, 306, 307, 308, Amar Business Park, Plot No.1, S.No. 105, Opp Sadanand Hotel, Nr Balewadi Stadi, Um, Baner, Pune, Maharashtra                              #D/517 305, Pune, महाराष्ट्र 83.333333
+           Dream Management Private Limited           Dream Mbanfagheent Private Limited                                                  Shop No-02, 121 Home, Garhichaukhandi, Noida, Gautam Buddha Nagar, Uttar Pradesh   Gautam Buddh Nagar, UP, Gautam Buddha Nagar, Shop No-02 88.235294
+                          Hyderabad Storage                            Hyderabad Stoarfe                                                                      14A, Mlascolonyroad No 12 Banjarahills, Hyderabad, Telangana                    4A, Hyderabad, Ghmc M Corp Og, తెలంగాణ 88.235294
+                     Ma Innovations Pvt Ltd                        Ma Invaictons Pvt Ltd                               Padmanabham, Technopark Kariavattom.P.O, Thiruvananthapuram, Thiruvananthapuram, Trivandrum, Kerala Hn ##4 Padmanabham, Thiruvananthapuram, Trivandrum, കേരളം 81.481481
+                       Classic Agro Pvt Ltd                        Classic  Afec Pvt Ltd                                1-98/5/2A, Sy No 85, Spacion Tower, Serlingampally Vittal Rao Nagar Madhapur, Hyderabad, Telangana                                  1-98/5/2A, Hyderabad, TG 75.000000
+Andhra Venkateswara (India) Private Limited Andhra Venkltaeefara (India) Private Limited                                            38/3023D, Near Kathrikadavu Bridge Kaloor Kadavanthara Road, Cochin, Ernakulam, Kerala                                                           86.274510
+                     Indo Marketing Limited                         Mr Indomarketing.Com                                                                        G-10, Sisodia Palave, East Boring Canal Road, Patna, Bihar                 G-##10, BR, Patna, East Boring Canal Road 78.787879
+                         Amar Solar Limited                         Amar Saodldr Limited                                                                            2/311, Vikas Khand Gomti Nagar, Lucknow, Uttar Pradesh                                       2/311, Bharwara, UP 81.818182
+Traceback (most recent call last):
+  File "<stdin>", line 27, in <module>
+AttributeError: 'function' object has no attribute 'mean'
+== India: recall 0.9486; missed with exact phon-key match 0.415
+   cap   10: recall +0.0029 -> 0.9515
+   cap   30: recall +0.0037 -> 0.9523
+   cap  100: recall +0.0144 -> 0.9629
+   cap  300: recall +0.0204 -> 0.9690
+== US: recall 0.9871; missed with exact phon-key match 0.207
+   cap   10: recall +0.0007 -> 0.9878
+   cap   30: recall +0.0009 -> 0.9881
+   cap  100: recall +0.0015 -> 0.9886
+   cap  300: recall +0.0025 -> 0.9896
+   cost India cap 10: 3.3M key pairs (upper bound, incl. overlap with existing) = 3.8 per S1
+   cost India cap 30: 6.5M key pairs (upper bound, incl. overlap with existing) = 7.4 per S1
+   cost India cap 100: 43.2M key pairs (upper bound, incl. overlap with existing) = 48.9 per S1
+   cost US cap 10: 6.4M key pairs (upper bound, incl. overlap with existing) = 4.8 per S1
+   cost US cap 30: 9.4M key pairs (upper bound, incl. overlap with existing) = 7.1 per S1
+   cost US cap 100: 30.8M key pairs (upper bound, incl. overlap with existing) = 23.3 per S1

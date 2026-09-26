@@ -129,48 +129,89 @@ def score(c, prob, tca, u, frac):
     return tune_thresholds(s1c, rid, prob[sel].astype(np.float64), d.y.values.astype(bool), tca[sub], len(sub), n_q=50)
 
 
-def main():
-    """Build stage-2 inputs from run-8 caches, run the three-arm comparison, log the results."""
+def build_train_inputs():
+    """Rebuild the stage-2 training matrix from run-8 caches.  Returns (c, rows, X, names, y, g,
+    tca, u, s1_country): c = all OOF pairs, rows = indices re-scored by stage 2, X aligned with rows."""
     c = pd.read_parquet(os.path.join(CACHE, "v2_oof_pairs.parquet"))
     p1 = c.p.values.astype(np.float32)
-    s1 = pd.read_parquet(os.path.join(CACHE, "train_source1.parquet"), columns=["entity_id", "core", "addr", "nums"])
+    s1 = pd.read_parquet(os.path.join(CACHE, "train_source1.parquet"), columns=["entity_id", "country", "core", "addr", "nums"])
     u = np.random.default_rng(CFG["seed"]).random(len(s1))
-    gt = pd.read_csv(os.path.join(ROOT, "dataset", "train", "train_ground_truth.tsv"), sep="\t", dtype=str,
+    gt = pd.read_csv(os.path.join(ROOT, "dataset", "train", "train_ground_truth.tsv"), sep="	", dtype=str,
                      keep_default_na=False)
     cnt = gt.matched_entity_ids.map(lambda x: len([i for i in x.split(",") if i]))
     tca = pd.Series(cnt.values, index=gt.source1_entity_id.values).reindex(s1.entity_id.values).fillna(0).values.astype(np.int64)
-
     rows = np.flatnonzero(p1 >= P_MIN)
     d = c.iloc[rows].reset_index(drop=True)
     log(f"{len(c)} pairs, {len(rows)} with stage-1 P >= {P_MIN} (pos {int(d.y.sum())} of {int(c.y.sum())})")
-
     rec = {k: pd.read_parquet(os.path.join(CACHE, f"train_source{k}.parquet"), columns=["core", "addr", "nums"])
            for k in (2, 3)}
-    sibf = sibling_features(d, rec, s1.set_index(pd.RangeIndex(len(s1)))[["core", "addr", "nums"]])
+    sibf = sibling_features(d, rec, s1[["core", "addr", "nums"]])
     del rec
-    log(f"sibling features: {list(sibf.columns)}")
-    ctx = stage2_context(c, p1).iloc[rows].reset_index(drop=True)   # context over the FULL candidate sets
+    ctx = stage2_context(c, p1).iloc[rows].reset_index(drop=True)
     with open(os.path.join(CACHE, "v2_train_feats", "_complete")) as fh:
-        names = fh.read().split(",")
-    X1 = load_rows(os.path.join(CACHE, "v2_train_feats"), rows, len(names))
-    log(f"stage-1 features loaded: {X1.shape}")
-    y = d.y.values.astype(np.int8)
-    g = d.s1_pos.values
+        names1 = fh.read().split(",")
+    X1 = load_rows(os.path.join(CACHE, "v2_train_feats"), rows, len(names1))
+    X = np.hstack([X1, ctx.values, sibf.values]).astype(np.float32)
+    names = names1 + list(ctx.columns) + list(sibf.columns)
+    log(f"stage-2 matrix {X.shape}")
+    return c, rows, X, names, d.y.values.astype(np.int8), d.s1_pos.values, tca, u, s1.country.values
 
-    res = {"stage1": p1}
-    for arm, parts in (("stage2_ctx", [X1, ctx.values]), ("stage2_ctx_sib", [X1, ctx.values, sibf.values])):
-        log(f"arm {arm}")
-        X = np.hstack(parts).astype(np.float32)
-        oof = grouped_cv(X, y, g, CFG["seed"] + 100)
-        del X
-        p = p1.copy()
-        p[rows] = oof
-        res[arm] = p
-        np.save(os.path.join(CACHE, f"v2_{arm}_oof.npy"), p)
-    for arm, p in res.items():
-        full = score(c, p, tca, u, 0.40)
-        n15 = score(c, p, tca, u, 0.15)
-        log(f"RESULT {arm:15s} full-40% {full[0]:.5f} (tf {full[1]:.3f} ta {full[2]:.3f}) | nested-15% {n15[0]:.5f}")
+
+def refit_and_shift():
+    """Shift check for the stage-2 layer (train stage 2 on one country's rows, apply to the other
+    country's stage-1 OOF; compare with stage 1 alone on the same S1s, retuned and with the training
+    country's thresholds), then refit the final stage-2 model on all rows and save it."""
+    c, rows, X, names, y, g, tca, u, cty_s1 = build_train_inputs()
+    p_s1 = c.p.values.astype(np.float32)
+    p_cv = np.load(os.path.join(CACHE, "v2_stage2_ctx_sib_oof.npy"))
+    cty_rows = cty_s1[g]
+    n_iter = int(np.mean([589, 562, 614, 512, 581]))      # best iterations of the ctx+sib CV arm
+    for held in ("India", "US"):
+        other = "US" if held == "India" else "India"
+        m = lgb.train(dict(CFG["lgb"], seed=CFG["seed"]), lgb.Dataset(X[cty_rows != held], y[cty_rows != held]), n_iter)
+        p2 = p_s1.copy()
+        va = cty_rows == held
+        p2[rows[va]] = m.predict(X[va])
+        _, tf1, ta1 = score_country(c, p_s1, tca, u, cty_s1, other)
+        _, tf2, ta2 = score_country(c, p_cv, tca, u, cty_s1, other)
+        s1_re = score_country(c, p_s1, tca, u, cty_s1, held)[0]
+        s2_re = score_country(c, p2, tca, u, cty_s1, held)[0]
+        s1_x = score_country(c, p_s1, tca, u, cty_s1, held, (tf1, ta1))
+        s2_x = score_country(c, p2, tca, u, cty_s1, held, (tf2, ta2))
+        log(f"SHIFT held-out {held}: retuned stage1 {s1_re:.5f} -> stage2(trained on {other}) {s2_re:.5f} | "
+            f"with {other} thresholds: stage1 {s1_x:.5f} -> stage2 {s2_x:.5f}")
+    final = lgb.train(dict(CFG["lgb"], seed=CFG["seed"]), lgb.Dataset(X, y, feature_name=names), n_iter)
+    final.save_model(os.path.join(CACHE, "v3_stage2_model.txt"))
+    imp = pd.Series(final.feature_importance("gain"), index=names).sort_values(ascending=False)
+    log("saved cache/v3_stage2_model.txt; top features: " + ", ".join(imp.index[:12]))
+
+
+def score_country(c, prob, tca, u, cty_s1, country, thresholds=None):
+    """Macro F0.5 over the 40 % S1s of one country: tuned (returns (score, tf, ta)) or, with
+    thresholds=(tf, ta), the fixed-threshold score."""
+    from postprocess import Decider, macro_f05_arrays
+    sub = np.flatnonzero((u < 0.40) & (cty_s1 == country))
+    sel = np.isin(c.s1_pos.values, sub) & (prob >= 0.01)
+    d = c[sel]
+    code = pd.Series(np.arange(len(sub)), index=sub)
+    s1c = code.reindex(d.s1_pos.values).values.astype(np.int64)
+    rid = (d.src.values.astype(np.int64) << 23) | d.r_pos.values
+    pr = prob[sel].astype(np.float64)
+    yy = d.y.values.astype(bool)
+    if thresholds is None:
+        return tune_thresholds(s1c, rid, pr, yy, tca[sub], len(sub), n_q=50)
+    keep = Decider(s1c, rid, pr).keep(*thresholds)
+    return macro_f05_arrays(s1c, yy, keep, tca[sub], len(sub))
+
+
+def main():
+    """--mode refit: shift check + final stage-2 model.  (The CV comparison that produced
+    EXPERIMENTS.md row 16 is recorded in runs/v2/stage2_results.log.)"""
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--mode", choices=["refit"], default="refit")
+    ap.parse_args()
+    refit_and_shift()
 
 
 if __name__ == "__main__":
