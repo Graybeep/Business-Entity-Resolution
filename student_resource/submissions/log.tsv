@@ -1,7 +1,8 @@
 tag	timestamp_IST	commit	cv_macro_f05	public_lb	t_first	t_add	blocking_recall	change_summary	hypothesis
 sub-25-1	25 Sep (time unknown)	unknown (not committed at submit time)	0.9648	0.952	0.6067	0.6117	0.971	run 2: B features + leading-zero norm, 15% S1 (output/)	first valid submission; measure CV-LB gap
-sub-26-?	26 Sep	12af19c	0.9677		0.7254	0.7054	0.9717	run 8: 40% S1, easy-negative sampling, fixed threshold grid (runs/v2/)	more data improves cross-country threshold transfer -> France; CV +0.0024 is below bar so LB decides
+sub-26-__ (run 8)	26 Sep	12af19c	0.9677		0.7254	0.7054	0.9717	run 8: 40% S1, easy-negative sampling, fixed threshold grid (runs/v2/)	more data improves cross-country threshold transfer -> France; CV +0.0024 is below bar so LB decides
 probe-E	26 Sep	12af19c			0.6954	0.7054	0.9717	run 8, t_first -0.03 all countries (1,200 S1 gain a first match)	thresholds tuned on US/India are too strict on test
 probe-B	26 Sep	12af19c			0.7754 (France) / 0.7254	0.7054	0.9717	run 8, France t_first +0.05 (343 France rows -> empty)	France needs a stricter first-match bar
 probe-C	26 Sep	12af19c			0.6754 (France) / 0.7254	0.7054	0.9717	run 8, France t_first -0.05 (334 France rows gain a match)	France needs a looser first-match bar
-sub-26-?	26 Sep	b22641a	0.97233		0.533	0.794	0.9717	run 9: run 8 + stage-2 sibling-agreement stack (runs/v3/)	siblings expose twins and name-only duplicates; stacked CV +0.0046, transfers across countries in shift check
+sub-26-__ (run 9)	26 Sep	b22641a	0.97233	0.959	0.533	0.794	0.9717	run 9: run 8 + stage-2 sibling-agreement stack (runs/v3/)	siblings expose twins and name-only duplicates; stacked CV +0.0046, transfers across countries in shift check
+DIAGNOSTIC-NEVER-FINAL	26 Sep	b22641a			France: never / others 0.533	0.794	0.9717	run 9 with all France rows empty (submissions/DIAGNOSTIC_run9_france_empty.tsv)	measures France score: France_implied = (0.959 - LB)/0.1498 + s

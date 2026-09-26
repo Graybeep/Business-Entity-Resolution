@@ -1,0 +1,10 @@
+t_first 0.5330 -> 0.5330 for ALL (1732544 S1 rows); t_add 0.7940 unchanged
+ALL rows non-empty -> empty: 0
+ALL rows otherwise changed: 0
+non-ALL rows changed: 0; pairs removed: 0
+ALIGNMENT OK: delta-0 identical to runs/v3
+t_first 0.5330 -> 10.5330 for France (259452 S1 rows); t_add 0.7940 unchanged
+France rows non-empty -> empty: 242472
+France rows otherwise changed: 0
+non-France rows changed: 0; pairs removed: 789452
+PASS — no blocking issues found. Safe to submit.

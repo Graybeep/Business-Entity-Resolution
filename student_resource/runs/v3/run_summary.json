@@ -1,0 +1,9 @@
+{
+  "cv": {
+    "t_first": 0.533,
+    "t_add": 0.794,
+    "macro_f05": 0.97233,
+    "stage2": true,
+    "note": "run 9 = run 8 stage 1 + stage-2 sibling; probs cache/v3_test_prob.npy"
+  }
+}
