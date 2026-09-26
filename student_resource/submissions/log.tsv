@@ -4,4 +4,4 @@ sub-26-?	26 Sep	12af19c	0.9677		0.7254	0.7054	0.9717	run 8: 40% S1, easy-negativ
 probe-E	26 Sep	12af19c			0.6954	0.7054	0.9717	run 8, t_first -0.03 all countries (1,200 S1 gain a first match)	thresholds tuned on US/India are too strict on test
 probe-B	26 Sep	12af19c			0.7754 (France) / 0.7254	0.7054	0.9717	run 8, France t_first +0.05 (343 France rows -> empty)	France needs a stricter first-match bar
 probe-C	26 Sep	12af19c			0.6754 (France) / 0.7254	0.7054	0.9717	run 8, France t_first -0.05 (334 France rows gain a match)	France needs a looser first-match bar
-sub-26-?	26 Sep	(next commit)	0.97233		0.533	0.794	0.9717	run 9: run 8 + stage-2 sibling-agreement stack (runs/v3/)	siblings expose twins and name-only duplicates; stacked CV +0.0046, transfers across countries in shift check
+sub-26-?	26 Sep	b22641a	0.97233		0.533	0.794	0.9717	run 9: run 8 + stage-2 sibling-agreement stack (runs/v3/)	siblings expose twins and name-only duplicates; stacked CV +0.0046, transfers across countries in shift check
