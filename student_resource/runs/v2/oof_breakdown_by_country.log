@@ -1,0 +1,14 @@
+== India: 353442 S1, CV macro F0.5 0.9567, loss 0.0433
+   (a) FP on true singletons   0.0034 (8%)
+   (b) FP on matched S1s       0.0077 (18%)
+   (c) threshold/model misses  0.0132 (30%)
+   (d) blocking misses         0.0190 (44%)   [sum 0.0433]
+   empty-address share (either side): FP pairs 0.191 of 14376, model-miss pairs 0.405 of 45049, all true pairs 0.030
+   singleton fraction 0.0560; blocking recall 0.9486
+== US: 529329 S1, CV macro F0.5 0.9751, loss 0.0249
+   (a) FP on true singletons   0.0017 (7%)
+   (b) FP on matched S1s       0.0043 (17%)
+   (c) threshold/model misses  0.0149 (60%)
+   (d) blocking misses         0.0040 (16%)   [sum 0.0249]
+   empty-address share (either side): FP pairs 0.410 of 11858, model-miss pairs 0.501 of 77101, all true pairs 0.041
+   singleton fraction 0.0558; blocking recall 0.9871
