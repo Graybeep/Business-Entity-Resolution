@@ -1,0 +1,217 @@
+=== input rates by source x country ===
+country source       n  postal_extracted  house_number_extracted  core_empty  empty_address  num_bis_ter  num_letter_suffix  arrondissement_8e  cedex  bp_box  st_or_ste_token_norm  saint_raw  article_in_core  n_nums
+ France     S1  259452            0.0043                  0.9958      0.0000         0.0000       0.0503             0.0014             0.0027 0.0001  0.0009                0.1053     0.1052           0.1407  1.0310
+  India     S1  809986            0.0030                  0.9135      0.0000         0.0000       0.0000             0.0583             0.0017 0.0000  0.0000                0.0496     0.0027           0.0009  1.9014
+     US     S1  663106            0.1106                  1.0000      0.0000         0.0000       0.0000             0.0090             0.0005 0.0000  0.0000                0.2234     0.0129           0.0046  1.2862
+ France     S2  703378            0.0029                  0.9315      0.0001         0.0306       0.0380             0.0083             0.0022 0.0001  0.0006                0.1004     0.0920           0.1267  0.9593
+  India     S2 2312565            0.0036                  0.9308      0.0000         0.0228       0.0000             0.0556             0.0016 0.0000  0.0000                0.0434     0.0026           0.0009  1.9984
+     US     S2 1871330            0.0945                  0.9212      0.0000         0.0294       0.0000             0.0203             0.0001 0.0000  0.0000                0.2113     0.0118           0.0044  1.1564
+ France     S3  731615            0.0031                  0.9338      0.0001         0.0294       0.0381             0.0080             0.0023 0.0001  0.0006                0.1004     0.0925           0.1239  0.9619
+  India     S3 2405000            0.0033                  0.9195      0.0000         0.0246       0.0000             0.0531             0.0014 0.0000  0.0000                0.0337     0.0021           0.0008  1.8264
+     US     S3 1945701            0.0957                  0.9298      0.0000         0.0284       0.0000             0.0250             0.0004 0.0000  0.0000                0.2148     0.0131           0.0044  1.2603
+
+=== flags: France vs max/min(US, India) differs by > 2x ===
+  S1 num_bis_ter: France 0.0503 vs US/India 0.0000-0.0000
+  S1 num_letter_suffix: France 0.0014 vs US/India 0.0090-0.0583
+  S1 bp_box: France 0.0009 vs US/India 0.0000-0.0000
+  S1 saint_raw: France 0.1052 vs US/India 0.0027-0.0129
+  S1 article_in_core: France 0.1407 vs US/India 0.0009-0.0046
+  S2 core_empty: France 0.0001 vs US/India 0.0000-0.0000
+  S2 num_bis_ter: France 0.0380 vs US/India 0.0000-0.0000
+  S2 num_letter_suffix: France 0.0083 vs US/India 0.0203-0.0556
+  S2 bp_box: France 0.0006 vs US/India 0.0000-0.0000
+  S2 saint_raw: France 0.0920 vs US/India 0.0026-0.0118
+  S2 article_in_core: France 0.1267 vs US/India 0.0009-0.0044
+  S3 core_empty: France 0.0001 vs US/India 0.0000-0.0000
+  S3 num_bis_ter: France 0.0381 vs US/India 0.0000-0.0000
+  S3 num_letter_suffix: France 0.0080 vs US/India 0.0250-0.0531
+  S3 bp_box: France 0.0006 vs US/India 0.0000-0.0000
+  S3 saint_raw: France 0.0925 vs US/India 0.0021-0.0131
+  S3 article_in_core: France 0.1239 vs US/India 0.0008-0.0044
+
+=== run 9 top-1 P(match) per S1, by country ===
+  US       n= 663106  mid(0.2-0.8)=0.0086  <0.2=0.0545  >=0.8=0.9369  quantiles {0.05: 0.111, 0.1: 0.999, 0.25: 1.0, 0.5: 1.0}
+  France   n= 259452  mid(0.2-0.8)=0.0123  <0.2=0.0573  >=0.8=0.9304  quantiles {0.05: 0.092, 0.1: 0.999, 0.25: 1.0, 0.5: 1.0}
+  India    n= 809986  mid(0.2-0.8)=0.0124  <0.2=0.0595  >=0.8=0.9280  quantiles {0.05: 0.044, 0.1: 0.988, 0.25: 1.0, 0.5: 1.0}
+
+=== 20 random France S1s, top-3 run-9 candidates ===
+
+S1 S1-256929524 | Cojeul Selam Anciens SAS | 5 Rue Charles Manso, Lille, Hauts-de-France
+   norm core='cojeul selam anciens' addr='5 r charles manso lille hauts de france' nums='5' postal=''
+   p=1.000 S3 S3-408800916 | Cojeul Selam Anciens [SAS] | 5 Rue Charles Manso, Lille, Hauts-de-France
+        name_tset=100 addr_tset=100 num_jacc=1.0 postal_eq=NA | r norm addr='5 r charles manso lille hauts de france'
+   p=1.000 S2 S2-803272563 | COJEUL SELAM ANCIENS | 5 RUE CHARLES MANSO, LILLE
+        name_tset=100 addr_tset=100 num_jacc=1.0 postal_eq=NA | r norm addr='5 r charles manso lille'
+   p=1.000 S3 S3-516220235 | Cojeul Selam Anciens SAS | 5 Rue Charles Manso, Lille, Hauts-de-France
+        name_tset=100 addr_tset=100 num_jacc=1.0 postal_eq=NA | r norm addr='5 r charles manso lille hauts de france'
+
+S1 S1-321865266 | Afrique Sante SAS | 36 Rue Poquelin Molière, Bordeaux, Nouvelle-Aquitaine
+   norm core='afrique sante' addr='36 r poquelin moliere bordeaux nouvelle aquitaine' nums='36' postal=''
+   p=1.000 S3 S3-458711994 | Afrique [Sante] | 36 Rue Poqueiln Moliere, Bordeaux
+        name_tset=100 addr_tset=82 num_jacc=1.0 postal_eq=NA | r norm addr='36 r poqueiln moliere bordeaux'
+   p=1.000 S3 S3-470311215 | SAS Afrique Sante | 36 Rue Poquelin Molière, Bordeaux
+        name_tset=100 addr_tset=100 num_jacc=1.0 postal_eq=NA | r norm addr='36 r poquelin moliere bordeaux'
+   p=1.000 S2 S2-650131261 | Afrique Seet SAS | 36 R. POQUELIN MOLIÈRE, BORDEAUX, Nouvelle-Aquitaine
+        name_tset=80 addr_tset=100 num_jacc=1.0 postal_eq=NA | r norm addr='36 r poquelin moliere bordeaux nouvelle aquitaine'
+
+S1 S1-104880930 | GBD Club SARL | 17 Rue Neptune, Saint-Herblain, Pays de la Loire
+   norm core='gbd club' addr='17 r neptune st herblain pays de la loire' nums='17' postal=''
+   p=1.000 S3 S3-103778967 | GBD çlub SARL | 17 Rue Netune, St-herblain
+        name_tset=100 addr_tset=82 num_jacc=1.0 postal_eq=NA | r norm addr='17 r netune st herblain'
+   p=0.006 S2 S2-448143618 | GB Çlub SARL | N° 30 R NEPTUNE, SAINT-HERBLAIN, Pays de la Loire
+        name_tset=93 addr_tset=96 num_jacc=0.0 postal_eq=NA | r norm addr='n 30 r neptune st herblain pays de la loire'
+   p=0.001 S3 S3-367113001 | OF | 1 Rue Neptune, Saint-Herblain, Pays de la Loire
+        name_tset=0 addr_tset=99 num_jacc=0.0 postal_eq=NA | r norm addr='1 r neptune st herblain pays de la loire'
+
+S1 S1-525018272 | Tempo Ecole SARL | 27 La Baconnière, Pays de la Loire, Pornic
+   norm core='tempo ecole' addr='27 la baconniere pays de la loire pornic' nums='27' postal=''
+   p=0.172 S2 S2-1057706 | Tempo Ècole SARL | 
+        name_tset=100 addr_tset=0 num_jacc=nan postal_eq=NA | r norm addr=''
+   p=0.109 S3 S3-427302057 | Tempo Ecole (Sarl) | 
+        name_tset=100 addr_tset=0 num_jacc=nan postal_eq=NA | r norm addr=''
+   p=0.105 S2 S2-656734497 | TEMPO ECOLE SARL | 
+        name_tset=100 addr_tset=0 num_jacc=nan postal_eq=NA | r norm addr=''
+
+S1 S1-730484895 | Remplacement Club SAS | 85 Rue de l'Hommelet, Roubaix, Hauts-de-France
+   norm core='remplacement club' addr='85 r de l hommelet roubaix hauts de france' nums='85' postal=''
+   p=1.000 S3 S3-542881285 | Remplacement  Club | 85 Rue De L'ommelet, Roubaix
+        name_tset=100 addr_tset=81 num_jacc=1.0 postal_eq=NA | r norm addr='85 r de l ommelet roubaix'
+   p=1.000 S2 S2-35875776 | Remplacement  Club | 85 RUE DE L'HOMMELET, ROUBAIX, Hauts-de-France
+        name_tset=100 addr_tset=100 num_jacc=1.0 postal_eq=NA | r norm addr='85 r de l hommelet roubaix hauts de france'
+   p=1.000 S2 S2-887073286 | Remplacement Club SAS | 85 RUE DE L'HOMMELET, ROUBAIX, Hauts-de-France
+        name_tset=100 addr_tset=100 num_jacc=1.0 postal_eq=NA | r norm addr='85 r de l hommelet roubaix hauts de france'
+
+S1 S1-620520909 | Harmonie & Cie | 721 Rue du Banc Vert, Dunkerque, Hauts-de-France
+   norm core='harmonie' addr='721 r du banc vert dunkerque hauts de france' nums='721' postal=''
+   p=1.000 S3 S3-823945707 | HARMONIE & CIE | Hauts-de-France, 721 Rue Du Banc Vert, Dunkerque
+        name_tset=100 addr_tset=100 num_jacc=1.0 postal_eq=NA | r norm addr='hauts de france 721 r du banc vert dunkerque'
+   p=1.000 S3 S3-169952479 | Harmonie  & Cie SASU | 721 Rue Du Banc Vert, Dunkerque, Hauts-de-France
+        name_tset=100 addr_tset=100 num_jacc=1.0 postal_eq=NA | r norm addr='721 r du banc vert dunkerque hauts de france'
+   p=1.000 S2 S2-711021949 | HARMONIE & CIE | 721 RUE DU BANC VERT, DUNKERQUE, Nord
+        name_tset=100 addr_tset=92 num_jacc=1.0 postal_eq=NA | r norm addr='721 r du banc vert dunkerque nord'
+
+S1 S1-628757945 | Fifi Anciens | 191 Avenue Pasteur, Pessac, Nouvelle-Aquitaine
+   norm core='fifi anciens' addr='191 ave pasteur pessac nouvelle aquitaine' nums='191' postal=''
+   p=1.000 S3 S3-692416298 | Fifi Anciens | Ave Pasteur, Pessac
+        name_tset=100 addr_tset=100 num_jacc=nan postal_eq=NA | r norm addr='ave pasteur pessac'
+   p=1.000 S3 S3-842800456 | Fifi Anciens | Avenue Pasteur, Pessac
+        name_tset=100 addr_tset=100 num_jacc=nan postal_eq=NA | r norm addr='ave pasteur pessac'
+   p=1.000 S3 S3-851851965 | Fifi Anciens | Avenue Pasteur, Pessac
+        name_tset=100 addr_tset=100 num_jacc=nan postal_eq=NA | r norm addr='ave pasteur pessac'
+
+S1 S1-903278683 | Afa & Frères SARL | 71 RUE Edouard Vaillant, 205, Roubaix, Hauts-de-France
+   norm core='afa freres' addr='71 r edouard vaillant 205 roubaix hauts de france' nums='205 71' postal=''
+   p=1.000 S3 S3-490986474 | Afa & Fères SARL | Nord, 205, #71 R. Edouard Vaillant, Roubaix
+        name_tset=95 addr_tset=93 num_jacc=1.0 postal_eq=NA | r norm addr='nord 205 71 r edouard vaillant roubaix'
+   p=1.000 S3 S3-783481944 | Afa & Frères SARL | Roubaix, 205, #71 Rue Edouard Vaillant, Nord
+        name_tset=100 addr_tset=93 num_jacc=1.0 postal_eq=NA | r norm addr='roubaix 205 71 r edouard vaillant nord'
+   p=0.999 S2 S2-428616381 | Afa & Frères Sarl | ROUBAIX, 71 RUE EDOUARD VAILLANT
+        name_tset=100 addr_tset=100 num_jacc=0.5 postal_eq=NA | r norm addr='roubaix 71 r edouard vaillant'
+
+S1 S1-891874504 | M2 & Frères SARL | 1 Rue Motte, Tourcoing, Hauts-de-France
+   norm core='m2 freres' addr='1 r motte tourcoing hauts de france' nums='1' postal=''
+   p=1.000 S2 S2-45330932 | M2 & Fcères SARL | 1 RUE MOTTE, TOURCOING
+        name_tset=89 addr_tset=100 num_jacc=1.0 postal_eq=NA | r norm addr='1 r motte tourcoing'
+   p=1.000 S2 S2-879664534 | M2 & Frères SARL | 1 R MOTTE, TOURCOING
+        name_tset=100 addr_tset=100 num_jacc=1.0 postal_eq=NA | r norm addr='1 r motte tourcoing'
+   p=0.992 S3 S3-606531810 | France M2 & SARL | Hauts-de-France, Tourcoing, #1 Rue Motte
+        name_tset=67 addr_tset=100 num_jacc=1.0 postal_eq=NA | r norm addr='hauts de france tourcoing 1 r motte'
+
+S1 S1-406094089 | Amicale des Bruno | 3 Rue André Devynck, Dunkerque, Hauts-de-France
+   norm core='amicale des bruno' addr='3 r andre devynck dunkerque hauts de france' nums='3' postal=''
+   p=1.000 S3 S3-277824817 | Amicale Des Bruno | Dunkerque, 3 Rue Andre Devynck, Nord
+        name_tset=100 addr_tset=92 num_jacc=1.0 postal_eq=NA | r norm addr='dunkerque 3 r andre devynck nord'
+   p=0.936 S2 S2-259046007 | Amicale des Bruno (SCI) | 
+        name_tset=100 addr_tset=0 num_jacc=nan postal_eq=NA | r norm addr=''
+   p=0.558 S3 S3-368201326 | SAS Amicale dês Bruno | 5 R Andre Devynck, Dunkerque
+        name_tset=100 addr_tset=96 num_jacc=0.0 postal_eq=NA | r norm addr='5 r andre devynck dunkerque'
+
+S1 S1-96696946 | EHPAD Notre | 89 Rue Nationale, Hauts-de-France, Tourcoing
+   norm core='ehpad notre' addr='89 r nationale hauts de france tourcoing' nums='89' postal=''
+   p=1.000 S2 S2-495400611 | EHPAD Nôtre | 89 RUE NATIONALE, TOURCOING, Hauts-de-France
+        name_tset=100 addr_tset=100 num_jacc=1.0 postal_eq=NA | r norm addr='89 r nationale tourcoing hauts de france'
+   p=1.000 S2 S2-511096293 | EHPAD Notre SAS | 89 RUE NATIONLAE, TOURCOING, Hauts-de-France
+        name_tset=100 addr_tset=98 num_jacc=1.0 postal_eq=NA | r norm addr='89 r nationlae tourcoing hauts de france'
+   p=1.000 S3 S3-975434551 | Ehpav Notre | 89 Rue Nationale, Tourcoing
+        name_tset=91 addr_tset=100 num_jacc=1.0 postal_eq=NA | r norm addr='89 r nationale tourcoing'
+
+S1 S1-140681702 | Locataires Sportive SAS | 19 i Rue Jacques Pitilion, Dunkerque, Hauts-de-France
+   norm core='locataires sportive' addr='19 i r jacques pitilion dunkerque hauts de france' nums='19' postal=''
+   p=1.000 S2 S2-568116106 | #locatairessportive | DUNKERQUE, 19 I RUE JACQUES PITILION, Hauts-de-France
+        name_tset=97 addr_tset=100 num_jacc=1.0 postal_eq=NA | r norm addr='dunkerque 19 i r jacques pitilion hauts de france'
+   p=1.000 S3 S3-859180668 | Locataires  Sportive SAS | 19 I Rue Jacques Pitilion, Dunkerque
+        name_tset=100 addr_tset=100 num_jacc=1.0 postal_eq=NA | r norm addr='19 i r jacques pitilion dunkerque'
+   p=1.000 S3 S3-500303236 | SAS Locataires Sportive | 19 I R Jacques Pitilion, Dunkerque
+        name_tset=100 addr_tset=100 num_jacc=1.0 postal_eq=NA | r norm addr='19 i r jacques pitilion dunkerque'
+
+S1 S1-460898905 | Republicaine (France) Patrimoine SARL | 87 Rue Boucher de Perthes, Lille, Hauts-de-France
+   norm core='republicaine france patrimoine' addr='87 r boucher de perthes lille hauts de france' nums='87' postal=''
+   p=1.000 S2 S2-255989468 | Republicaine (France) Pâtrimoine SARL | NO. 87 RUE BOUCHER DE PERTHES, LILLE, Nord
+        name_tset=100 addr_tset=92 num_jacc=1.0 postal_eq=NA | r norm addr='87 r boucher de perthes lille nord'
+   p=1.000 S2 S2-692059539 | REPUBLICAINE (FRANCE) PATRIMOINE | LILLE, NO. 87 R BOUCHER DE PERTHES, Nord
+        name_tset=100 addr_tset=92 num_jacc=1.0 postal_eq=NA | r norm addr='lille 87 r boucher de perthes nord'
+   p=1.000 S2 S2-380532482 | Republicaine (France) Patrimoine SARL | NO. 87 RUE BOUCHER DE PERTHES, LILLE, Nord
+        name_tset=100 addr_tset=92 num_jacc=1.0 postal_eq=NA | r norm addr='87 r boucher de perthes lille nord'
+
+S1 S1-939660750 | EHPAD du Pierre | Nouvelle-Aquitaine, Bordeaux, 78 Avenue du Général Leclerc
+   norm core='ehpad du pierre' addr='nouvelle aquitaine bordeaux 78 ave du general leclerc' nums='78' postal=''
+   p=1.000 S2 S2-556079357 | EHPAD DU PIERRE | 78 AVE DU GÉNÉRAL LECLERC, BORDEAUX, Gironde
+        name_tset=100 addr_tset=89 num_jacc=1.0 postal_eq=NA | r norm addr='78 ave du general leclerc bordeaux gironde'
+   p=1.000 S3 S3-635299188 | EHPAD du Pierre | 78 Av Du Général Leclerc, Bordeaux, Gironde
+        name_tset=100 addr_tset=89 num_jacc=1.0 postal_eq=NA | r norm addr='78 ave du general leclerc bordeaux gironde'
+   p=1.000 S3 S3-358976271 | EHPAD du Pierre | 78 Av Du Général Leclerc, Bordeaux, Gironde
+        name_tset=100 addr_tset=89 num_jacc=1.0 postal_eq=NA | r norm addr='78 ave du general leclerc bordeaux gironde'
+
+S1 S1-84568215 | Mene (France) Foyer SA | 8 Avenue du Clos Gaux, Nantes, Pays de la Loire
+   norm core='mene france foyer' addr='8 ave du clos gaux nantes pays de la loire' nums='8' postal=''
+   p=1.000 S2 S2-296922355 | Mene (France) Foyer SA | 8 AVENUE DU CLOS GAUX, NANTES, Loire-Atlantique
+        name_tset=100 addr_tset=85 num_jacc=1.0 postal_eq=NA | r norm addr='8 ave du clos gaux nantes loire atlantique'
+   p=0.007 S3 S3-954456495 | Mene (France) Foyer S.C.I. | 17 Ave Du Cols Gaux, Nantes, Loire-Atlantique
+        name_tset=100 addr_tset=73 num_jacc=0.0 postal_eq=NA | r norm addr='17 ave du cols gaux nantes loire atlantique'
+   p=0.006 S3 S3-567908704 | Mene (France) Foyer SARL | 17 Avenue Du Clos Gaux, Nantes, Loire-Atlantique
+        name_tset=100 addr_tset=82 num_jacc=0.0 postal_eq=NA | r norm addr='17 ave du clos gaux nantes loire atlantique'
+
+S1 S1-934107950 | Brebis Ecole SARL | 89 Rue Drouot, Roubaix, Hauts-de-France
+   norm core='brebis ecole' addr='89 r drouot roubaix hauts de france' nums='89' postal=''
+   p=1.000 S3 S3-17452750 | Brebis Ecole Sarl | Roubaix, Nord, 89 Rue Drouot
+        name_tset=100 addr_tset=88 num_jacc=1.0 postal_eq=NA | r norm addr='roubaix nord 89 r drouot'
+   p=1.000 S3 S3-972905109 | Brebis | 89 Rue Drouot, Roubaix, Hauts-de-France
+        name_tset=100 addr_tset=100 num_jacc=1.0 postal_eq=NA | r norm addr='89 r drouot roubaix hauts de france'
+   p=0.001 S3 S3-720331251 | Brebis Ecole Participations SARL | 92 R. Drouot, Roubaix
+        name_tset=100 addr_tset=91 num_jacc=0.0 postal_eq=NA | r norm addr='92 r drouot roubaix'
+
+S1 S1-876984842 | YYL Comite EURL | 5 Place Francis de Pressensé, Bordeaux, Nouvelle-Aquitaine
+   norm core='yyl comite' addr='5 pl francis de pressense bordeaux nouvelle aquitaine' nums='5' postal=''
+   p=1.000 S3 S3-852008508 | EURL YYL Comite | Bordeaux, Nouvelle-Aquitaine, 5 Place Francis De Pressensé
+        name_tset=100 addr_tset=100 num_jacc=1.0 postal_eq=NA | r norm addr='bordeaux nouvelle aquitaine 5 pl francis de pressense'
+   p=0.932 S2 S2-482279503 | EURL YYL Comite | PLACE FRANCIS DE PRESSENSÉ, Bordeaux, Nouvelle-Aquitaine
+        name_tset=100 addr_tset=100 num_jacc=nan postal_eq=NA | r norm addr='pl francis de pressense bordeaux nouvelle aquitaine'
+   p=0.000 S2 S2-960463569 | YYL Comite International EURL | 18 PL FRANCIS DE PRSSENSÉ, BORDEAUX
+        name_tset=100 addr_tset=79 num_jacc=0.0 postal_eq=NA | r norm addr='18 pl francis de prssense bordeaux'
+
+S1 S1-162191805 | Municipale (France) Club SA | 20 Rue des Cinq Voies, Tourcoing, Hauts-de-France
+   norm core='municipale france club' addr='20 r des cinq voies tourcoing hauts de france' nums='20' postal=''
+   p=1.000 S3 S3-125769827 | Municipale (France) Club | 20 R. Des Cinq Voies, Tourcoing
+        name_tset=100 addr_tset=100 num_jacc=1.0 postal_eq=NA | r norm addr='20 r des cinq voies tourcoing'
+   p=1.000 S3 S3-649460108 | Municipale (France) Club S.A. | 20 Rue Des Cinq Voies, Tourcoing
+        name_tset=100 addr_tset=100 num_jacc=1.0 postal_eq=NA | r norm addr='20 r des cinq voies tourcoing'
+   p=1.000 S2 S2-73473383 | Municipale (France)  Club SA | 20 RUE DES CINQ VOIES, TOURCOING
+        name_tset=100 addr_tset=100 num_jacc=1.0 postal_eq=NA | r norm addr='20 r des cinq voies tourcoing'
+
+S1 S1-106380668 | Universitaire Comite EI | 3 Allée des Tulipes, Saint-Nazaire, Pays de la Loire
+   norm core='universitaire comite ei' addr='3 all des tulipes st nazaire pays de la loire' nums='3' postal=''
+   p=1.000 S2 S2-118243199 | UNIVERSITAIRE COMITE EI | ST-NAZAIRE, 3 ALLEE DES TULMPES, Pays de la Loire
+        name_tset=100 addr_tset=98 num_jacc=1.0 postal_eq=NA | r norm addr='st nazaire 3 all des tulmpes pays de la loire'
+   p=0.996 S3 S3-358127683 | Universitaire Comite | Allee Des Tulipes, Saint-nazaire, Pays de la Loire
+        name_tset=100 addr_tset=100 num_jacc=nan postal_eq=NA | r norm addr='all des tulipes st nazaire pays de la loire'
+   p=0.022 S2 S2-649168076 | Universitaire Comite Snc | SAINT-NAZAIRE, Pays de la Loire, 10 ALÉLE DES TULIPES
+        name_tset=100 addr_tset=95 num_jacc=0.0 postal_eq=NA | r norm addr='st nazaire pays de la loire 10 alele des tulipes'
+
+S1 S1-113180220 | Saint-Herblain Centre SARL | 6 Impasse Euclide, Saint-Herblain, Pays de la Loire
+   norm core='saint herblain centre' addr='6 imp euclide st herblain pays de la loire' nums='6' postal=''
+   p=1.000 S2 S2-235051256 | Saint-Herblain Centre  SARL | 6 IMPASSE EUCLIDE, ST-HERBLAIN
+        name_tset=100 addr_tset=100 num_jacc=1.0 postal_eq=NA | r norm addr='6 imp euclide st herblain'
+   p=0.017 S2 S2-521977630 | SAINT-HERBLAIN ÇENTRE | 
+        name_tset=100 addr_tset=0 num_jacc=nan postal_eq=NA | r norm addr=''
+   p=0.003 S3 S3-575687927 | Saint-Herblain SARL & Fils | Loire-Atlantique, Imp. Euclide, St-herblain
+        name_tset=85 addr_tset=84 num_jacc=nan postal_eq=NA | r norm addr='loire atlantique imp euclide st herblain'

@@ -1,0 +1,32 @@
+[    20s] 15 % subset: 330664 S1, 1143182 true pairs, current candidates 36.6/S1
+[    21s] recall 0.9710; missed 33157 of 1143182 true pairs
+col_0                              India     US    all
+row_0                                                 
+empty address                      0.210  0.472  0.284
+name divergence / DBA (tset < 70)  0.125  0.304  0.176
+other (similar name, has address)  0.221  0.219  0.220
+postal mismatch                    0.000  0.005  0.001
+transliteration (non-Latin name)   0.443  0.000  0.318
+[    21s] a) exact (country, postal, house number)
+[    23s]   a) postal+number, S1 group cap 20             recall +0.0001 -> 0.9711 | +1.2 cands/S1
+[    25s]   a) postal+number, S1 group cap 100            recall +0.0001 -> 0.9711 | +2.9 cands/S1
+[    25s] b) rarest core token
+[    49s]     b) index US done
+[    64s]     b) index India done
+[    65s]   b) rarest token, df cap 5                     recall +0.0004 -> 0.9714 | +0.6 cands/S1
+[    67s]   b) rarest token, df cap 20                    recall +0.0006 -> 0.9716 | +5.3 cands/S1
+[    72s]   b) rarest token, df cap 50                    recall +0.0009 -> 0.9719 | +27.4 cands/S1
+[    73s] d) empty-address records -> name-only top-k
+[    99s]     d) US done
+[   109s]     d) India done
+[   110s]   d) empty-address name-only top-10             recall +0.0014 -> 0.9724 | +0.9 cands/S1
+[   110s]   d) empty-address name-only top-20             recall +0.0020 -> 0.9730 | +2.0 cands/S1
+[   111s]   d) empty-address name-only top-50             recall +0.0030 -> 0.9740 | +5.5 cands/S1
+[   111s] c) sibling expansion (30 % sample of subset S1s)
+[   298s]     c) US: 179286 anchors
+[   416s]     c) India: 118464 anchors
+[   417s]   c) sibling expansion top-3 x 5 neighbours (sample)   recall +0.0074 (sample-based) | +2.0 cands/S1
+[   417s] unions
+[   417s]   UNION a_cap20+b_cap20+d_k20               recall 0.9734 | +8.4 cands/S1 (upper bound for c)
+[   418s]   UNION a_cap100+b_cap50+d_k50              recall 0.9745 | +35.3 cands/S1 (upper bound for c)
+[   418s]   UNION a_cap20+b_cap20+d_k20+c             recall 0.9754 | +9.0 cands/S1 (upper bound for c) (c counted only on its sample: recall gain is a lower bound)
