@@ -1,0 +1,38 @@
+[   149s] train sample + stats done
+[    742s]   features 100000/100000
+[   743s] test India: sample features done
+[   1016s]   features 100000/100000
+[  1016s] test US: sample features done
+[  1038s] ADVERSARIAL AUC (US+India, 5-fold) = 0.9108 +- 0.0013
+top-10 features by gain (share):
+ctx_gap_rec          0.177
+name_rec_miss_idf    0.165
+ctx_n_rec            0.147
+name_s1_miss_idf     0.101
+rank_rev             0.058
+addr_ntok_l          0.033
+sim_rev              0.029
+base                 0.027
+sim_c4               0.027
+name_jw              0.026
+
+median train vs test for the top-10:
+  ctx_gap_rec            train    0.1367  test    0.4318  NaN-rate train 0.000 test 0.000
+  name_rec_miss_idf      train    7.9984  test    8.0981  NaN-rate train 0.000 test 0.000
+  ctx_n_rec              train    7.0000  test   11.0000  NaN-rate train 0.000 test 0.000
+  name_s1_miss_idf       train    7.5656  test    7.5576  NaN-rate train 0.000 test 0.000
+  rank_rev               train  255.0000  test  255.0000  NaN-rate train 0.000 test 0.000
+  addr_ntok_l            train    7.0000  test    7.0000  NaN-rate train 0.000 test 0.000
+  sim_rev                train    0.6024  test    0.5827  NaN-rate train 0.744 test 0.681
+  base                   train    0.3628  test    0.3615  NaN-rate train 0.000 test 0.000
+  sim_c4                 train    0.7269  test    0.7353  NaN-rate train 0.727 test 0.725
+  name_jw                train    0.6157  test    0.6227  NaN-rate train 0.000 test 0.000
+
+per-country candidate / score statistics (train = 40 % S1 OOF, test = run-8 refit):
+  India  train cands_per_s1=36.9685  cand_s1_per_record=3.8551  top1_p_median=0.9999  top1_p<0.5=0.0571  top1_top2_gap_median=0.0003  near_tie_rate(rec top>=0.5, gap<0.05)=0.0007
+  India  test  cands_per_s1=37.3051  cand_s1_per_record=6.4126  top1_p_median=0.9999  top1_p<0.5=0.0599  top1_top2_gap_median=0.0004  near_tie_rate(rec top>=0.5, gap<0.05)=0.0008
+  US     train cands_per_s1=36.3253  cand_s1_per_record=3.8639  top1_p_median=1.0000  top1_p<0.5=0.0545  top1_top2_gap_median=0.0001  near_tie_rate(rec top>=0.5, gap<0.05)=0.0004
+  US     test  cands_per_s1=35.4487  cand_s1_per_record=6.1586  top1_p_median=1.0000  top1_p<0.5=0.0550  top1_top2_gap_median=0.0001  near_tie_rate(rec top>=0.5, gap<0.05)=0.0005
+  ctx_rank_rec: train quantiles [  3.  34. 213.] test [  5.  62. 398.]
+  ctx_n_rec: train quantiles [  7.    82.   445.01] test [ 11. 145. 746.]
+  ctx_gap_rec: train quantiles [0.137 0.61  0.91 ] test [0.432 0.693 1.   ]

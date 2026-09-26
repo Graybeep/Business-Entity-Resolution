@@ -5,4 +5,4 @@ probe-E	26 Sep	12af19c			0.6954	0.7054	0.9717	run 8, t_first -0.03 all countries
 probe-B	26 Sep	12af19c			0.7754 (France) / 0.7254	0.7054	0.9717	run 8, France t_first +0.05 (343 France rows -> empty)	France needs a stricter first-match bar
 probe-C	26 Sep	12af19c			0.6754 (France) / 0.7254	0.7054	0.9717	run 8, France t_first -0.05 (334 France rows gain a match)	France needs a looser first-match bar
 sub-26-__ (run 9)	26 Sep	b22641a	0.97233	0.959	0.533	0.794	0.9717	run 9: run 8 + stage-2 sibling-agreement stack (runs/v3/)	siblings expose twins and name-only duplicates; stacked CV +0.0046, transfers across countries in shift check
-DIAGNOSTIC-NEVER-FINAL	26 Sep	b22641a			France: never / others 0.533	0.794	0.9717	run 9 with all France rows empty (submissions/DIAGNOSTIC_run9_france_empty.tsv)	measures France score: France_implied = (0.959 - LB)/0.1498 + s
+sub-26-__ DIAGNOSTIC-NEVER-FINAL	26 Sep	b22641a		0.826	France: never / others 0.533	0.794	0.9717	run 9 with all France rows empty (submissions/DIAGNOSTIC_run9_france_empty.tsv)	measures France score: France_implied = (0.959 - LB)/0.1498 + s

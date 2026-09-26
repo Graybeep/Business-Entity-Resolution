@@ -1,0 +1,43 @@
+=== expand train
+[    63s]   expand train India: d 8112 hits, c 76050 hits from 6925 anchors
+[   137s]   expand train US: d 18863 hits, c 117962 hits from 10730 anchors
+[   137s] expand train: 58215 round-2 pairs = 16.5 per S1
+=== r2feats train
+[    144s]   features 23456/23456
+[   144s]   r2feats train India: 23456 pairs
+[    161s]   features 34759/34759
+[   161s]   r2feats train US: 34759 pairs
+Traceback (most recent call last):
+  File "D:\EXPERIMENTS\ml_amazon\student_resource\code\business_entity_resolution\src\run10.py", line 440, in <module>
+    main()
+  File "D:\EXPERIMENTS\ml_amazon\student_resource\code\business_entity_resolution\src\run10.py", line 432, in main
+    r2feats(sys.argv[2])
+  File "D:\EXPERIMENTS\ml_amazon\student_resource\code\business_entity_resolution\src\run10.py", line 180, in r2feats
+    folds = np.load(os.path.join(CACHE, "v2_folds.npy"))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\wicke\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\numpy\lib\npyio.py", line 427, in load
+    fid = stack.enter_context(open(os_fspath(file), "rb"))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'D:\\EXPERIMENTS\\ml_amazon\\student_resource\\cache\\v2_folds.npy'
+=== r2feats train
+[    151s]   features 23456/23456
+[   152s]   r2feats train India: 23456 pairs
+[    168s]   features 34759/34759
+[   169s]   r2feats train US: 34759 pairs
+[   173s] r2feats train: done; stage-1 P >= 0.001 on 0.270 of round-2 pairs
+=== s2train
+[    35s] union train all: 186300 pairs (58215 round 2); stage-2 rows 31345 (15737 round 2)
+[    78s]   context / sibling / name-frequency features done
+[    87s]   s2 fold 0: best_iter=93 logloss=0.04506
+[    88s]   s2 fold 1: best_iter=92 logloss=0.04275
+[    90s]   s2 fold 2: best_iter=111 logloss=0.04105
+[    90s]   s2 fold 3: best_iter=77 logloss=0.05683
+[    91s]   s2 fold 4: best_iter=85 logloss=0.05396
+[   101s] RESULT run 10 full40: 0.97487 (tf 0.698 ta 0.733)
+[   102s] RESULT run 10 nested15: 0.97213 (tf 0.578 ta 0.863)
+[   102s] RESULT run 10 India: 0.96682 (tf 0.850 ta 0.682)
+[   103s] RESULT run 10 US: 0.97907 (tf 0.211 ta 0.748)
+[   103s]   run 9 reference: full40 0.97233 / nested15 0.97232 / India 0.96246 / US 0.97871
+[   103s] union candidate recall 0.9855 (run 9: 0.9717); candidates/S1 52.8
+[   103s] saved r10_stage2_model.txt; top features: p1, p1_rec_max, rank_na, p1_rec_sum, p1_rec_n_hi, sim_rev, rank_c4, nf_s1_same_rcore, base, sib_pmass, nf_rec_same_rcore, sib_num_jacc_max, sib_name_wmean, sim_na, rank_rev
+=== expand test

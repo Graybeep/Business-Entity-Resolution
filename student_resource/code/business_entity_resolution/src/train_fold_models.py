@@ -1,4 +1,4 @@
-"""PREPARED, NOT RUN: regenerate run 8's five stage-1 fold models for test-time fold averaging.
+"""Regenerate run 8's five stage-1 fold models for test-time fold averaging.
 
 Run 8 (scaled training) kept only the final refit.  This rebuilds the exact run-8 training inputs
 from caches (cached 40 % candidates + cached feature chunks; base scores are recomputed because the
@@ -15,6 +15,7 @@ import os
 import sys
 
 import numpy as np
+import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import pipeline as PL  # noqa: E402
@@ -40,9 +41,12 @@ def main():
     with open(os.path.join(fdir, "_complete")) as fh:
         feat_names = fh.read().split(",")
     meta = c[["s1_pos", "y", "ctx_rank_s1", "ctx_rank_rec"]].copy()
-    del c, tr
+    ref = pd.read_parquet(os.path.join(cache, "v2_oof_pairs.parquet"), columns=["s1_pos", "src", "r_pos", "y"])
+    assert (ref.s1_pos.values == c.s1_pos.values).all() and (ref.r_pos.values == c.r_pos.values).all()         and (ref.y.values == c.y.values).all(), "rebuilt candidates are not in run-8 order"
+    del c, tr, ref
     res = TS.scaled_cv(fdir, feat_names, meta, PL.CFG["lgb"], PL.CFG, PL.log,
                        save_prefix=os.path.join(cache, "v2_stage1"), predict_oof=False)
+    np.save(os.path.join(cache, "v2_folds.npy"), res["folds"])          # aligned with v2_oof_pairs rows
     PL.log(f"fold models saved; best iterations {res['best_iters']} (run 8: [1787, 2165, 2569, 2317, 2751])")
 
 
