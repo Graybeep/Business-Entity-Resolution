@@ -31,8 +31,11 @@ CFG = {
     "num_boost_round": 3000,
     "early_stopping": 50,
     "predict_chunk_s1": 150_000,
+    "neg_sampling": None,      # dict -> scaled training (training_scaled.py); None -> in-memory CV
     "stage2": False,           # stacked 2nd stage: +0.0006 CV (noise) in ablation, so off
 }
+
+NEG_SAMPLING_DEFAULT = {"hard_rank_s1": 3, "hard_rank_rec": 1, "easy_rate": 0.25}
 
 T0 = time.time()
 
@@ -79,12 +82,14 @@ def diagnostics(tr, gt, pairs):
 # Blocking (cached)
 # ---------------------------------------------------------------------------
 def get_candidates(split, data, cache_dir, s1_mask=None):
-    cp = os.path.join(cache_dir, f"{split}_cands.parquet")
+    name = f"train_cands_f{CFG['train_s1_frac']:g}.parquet" if split == "train" else f"{split}_cands.parquet"
+    cp = os.path.join(cache_dir, name)
     if os.path.exists(cp):
         return pd.read_parquet(cp)
     log(f"blocking {split} ...")
+    ckpt = os.path.join(cache_dir, name.replace(".parquet", "_ckpt"))
     c = generate_candidates(data["source1"], data["source2"], data["source3"], CFG["blocking"], log=log,
-                            s1_mask=s1_mask)
+                            s1_mask=s1_mask, ckpt_dir=ckpt)
     c.to_parquet(cp, index=False)
     return c
 
@@ -246,13 +251,13 @@ def cross_validate(X, y, groups):
     return oof, best_iters, models
 
 
-def evaluate(c, prob, true_count, s1_subset):
+def evaluate(c, prob, true_count, s1_subset, n_q=50):
     """Tune (t_first, t_add) and score over ALL S1 in s1_subset (no-candidate S1s included)."""
     code = pd.Series(np.arange(len(s1_subset)), index=s1_subset)
     s1c = code.reindex(c.s1_pos.values).values.astype(np.int64)
     rid = (c.src.values.astype(np.int64) << 23) | c.r_pos.values
     tc = true_count[s1_subset]
-    sc, tf, ta = tune_thresholds(s1c, rid, prob, c.y.values.astype(bool), tc, len(s1_subset))
+    sc, tf, ta = tune_thresholds(s1c, rid, prob, c.y.values.astype(bool), tc, len(s1_subset), n_q=n_q)
     return sc, tf, ta, s1c, rid
 
 
@@ -299,6 +304,59 @@ def shift_check(X, y, c, true_count, s1_country):
     return res
 
 
+def run_scaled(args, summary, c, tr, stats, true_count, train_mask, u_s1):
+    """Stage 4 scaled path (CFG["neg_sampling"]).  Writes features to disk, runs grouped CV with
+    easy-negative subsampling in training folds only, tunes thresholds on full-candidate OOF,
+    reports the score on the nested 15 % subset for comparison with the in-memory baseline,
+    optionally runs the shift check, refits and saves `<tag>_model_stage1.txt`.
+    Does not touch the test set or the untagged model / output files."""
+    import training_scaled as TS
+    tag = args.tag or "scaled"
+    fdir = os.path.join(args.cache, f"{tag}_train_feats")
+    log(f"scaled training: {train_mask.sum()} S1, {len(c)} pairs, pos={int(c.y.sum())}")
+    feat_names = TS.write_feature_chunks(c, build_features, tr, stats, fdir, log)
+    s1_country = np.asarray(tr["source1"].country.values, dtype=object)
+    meta = c[["s1_pos", "y", "ctx_rank_s1", "ctx_rank_rec"]].copy()
+    c = c[["s1_pos", "src", "r_pos", "y"]].copy()
+    del tr
+    res = TS.scaled_cv(fdir, feat_names, meta, CFG["lgb"], CFG, log)
+    oof = res["oof"]
+    CFG["mean_best_iter"] = int(np.mean(res["best_iters"]))
+    s1_subset = np.flatnonzero(train_mask)
+    sc, tf, ta, _, rid = evaluate(c, oof, true_count, s1_subset, n_q=30)
+    ntr = near_tie_rate(rid, oof, min_top=ta)
+    log(f"CV macro F0.5 = {sc:.5f}  t_first={tf:.4f} t_add={ta:.4f} near_tie_rate={ntr:.4f}")
+    # apples-to-apples with the in-memory baseline: same 15 % S1 set, same competitor set
+    base_frac = 0.15
+    m15 = u_s1 < base_frac
+    sel = m15[c.s1_pos.values]
+    sc15, tf15, ta15, _, _ = evaluate(c[sel], oof[sel], true_count, np.flatnonzero(m15), n_q=30)
+    log(f"nested {base_frac:.0%} subset: CV macro F0.5 = {sc15:.5f} (t_first={tf15:.4f} t_add={ta15:.4f})")
+    summary["cv"] = {"macro_f05": sc, "t_first": tf, "t_add": ta, "near_tie_rate": ntr, "stage2": False,
+                     "best_iters": res["best_iters"], "n_train_s1": int(train_mask.sum()), "n_train_pairs": int(len(c)),
+                     "n_sampled_training_rows": int(len(res["rows"])), "neg_sampling": CFG["neg_sampling"],
+                     "nested_15pct": {"macro_f05": sc15, "t_first": tf15, "t_add": ta15}}
+    c.assign(p=oof).to_parquet(os.path.join(args.cache, f"{tag}_oof_pairs.parquet"))
+    if args.shift_check:
+        summary["shift_check"] = TS.scaled_shift_check(fdir, meta, s1_country, res, CFG["lgb"], CFG,
+                                                       CFG["mean_best_iter"], evaluate, score_fixed, c, true_count,
+                                                       train_mask, (tf, ta), log)
+    log(f"refit on {len(res['rows'])} sampled rows, {CFG['mean_best_iter']} rounds")
+    final = lgb.train(dict(CFG["lgb"], seed=CFG["seed"]), res["full"], CFG["mean_best_iter"])
+    final.save_model(os.path.join(args.cache, f"{tag}_model_stage1.txt"))
+    imp = pd.Series(final.feature_importance("gain"), index=final.feature_name()).sort_values(ascending=False)
+    summary["feature_importance_gain"] = {k: float(v) for k, v in imp.items()}
+    log("top features: " + ", ".join(imp.index[:12]))
+    with open(os.path.join(args.out, "run_summary.json"), "w") as fh:
+        json.dump(summary, fh, indent=2, default=str)
+    if not args.skip_test:
+        assert os.path.abspath(args.out) != os.path.abspath("output") or not args.tag, "tagged runs must not write output/"
+        del res, meta, c
+        predict_test(args, summary, {1: final}, feat_names, None, tf, ta)
+        with open(os.path.join(args.out, "run_summary.json"), "w") as fh:
+            json.dump(summary, fh, indent=2, default=str)
+
+
 # ---------------------------------------------------------------------------
 # Output
 # ---------------------------------------------------------------------------
@@ -330,7 +388,7 @@ def predict_test(args, summary, models, feat_names, feat2, tf, ta):
                                 "reduction_ratio_vs_full_cross_product":
                                     1 - len(ct) / (n_s1 * (len(te["source2"]) + len(te["source3"])))}
     ct = ct.sort_values(["s1_pos", "src", "r_pos"]).reset_index(drop=True)
-    prob_path = os.path.join(args.cache, "test_prob.npy")
+    prob_path = os.path.join(args.cache, f"{args.tag + '_' if args.tag else ''}test_prob.npy")
     if os.path.exists(prob_path) and args.reuse_test_prob:
         prob = np.load(prob_path)
         log("loaded cached test probabilities")
@@ -396,15 +454,26 @@ def main():
     ap.add_argument("--predict-only", action="store_true",
                     help="skip training: reuse cache/model_stage*.txt and thresholds from output/run_summary.json")
     ap.add_argument("--reuse-test-prob", action="store_true", help="reuse cache/test_prob.npy if present")
+    ap.add_argument("--train-frac", type=float, default=None, help="override CFG['train_s1_frac']")
+    ap.add_argument("--neg-sampling", action="store_true",
+                    help="scaled training: disk-backed features, easy-negative subsampling in training folds only")
+    ap.add_argument("--tag", default="", help="prefix for cached models / OOF of experimental runs")
     args = ap.parse_args()
+    if args.train_frac is not None:
+        CFG["train_s1_frac"] = args.train_frac
+    if args.neg_sampling:
+        CFG["neg_sampling"] = CFG["neg_sampling"] or dict(NEG_SAMPLING_DEFAULT)
     os.makedirs(args.out, exist_ok=True)
     summary = {"config": {k: v for k, v in CFG.items() if not k.startswith("_")}}
     rng = np.random.default_rng(CFG["seed"])
     if args.predict_only:
         with open(os.path.join(args.out, "run_summary.json")) as fh:
             summary = json.load(fh)
-        models = {int(f[len("model_stage"):-4]): lgb.Booster(model_file=os.path.join(args.cache, f))
-                  for f in os.listdir(args.cache) if f.startswith("model_stage") and f.endswith(".txt")}
+        prefix = f"{args.tag}_model_stage" if args.tag else "model_stage"
+        models = {int(f[len(prefix):-4]): lgb.Booster(model_file=os.path.join(args.cache, f))
+                  for f in os.listdir(args.cache) if f.startswith(prefix) and f.endswith(".txt")}
+        log(f"predict-only: models {sorted(models)} from {prefix}*.txt, "
+            f"t_first={summary['cv']['t_first']:.4f} t_add={summary['cv']['t_add']:.4f}")
         if not summary["cv"].get("stage2"):
             models = {1: models[1]}
         feat_names = models[1].feature_name()
@@ -419,7 +488,8 @@ def main():
     gt, pairs = load_ground_truth(args.data_dir)
     summary["diagnostics"] = diagnostics(tr, gt, pairs)
     n_s1 = len(tr["source1"])
-    train_mask = rng.random(n_s1) < CFG["train_s1_frac"]
+    u_s1 = rng.random(n_s1)                   # one draw per S1: masks for different fractions are nested
+    train_mask = u_s1 < CFG["train_s1_frac"]
     CFG["_train_s1_mask"] = train_mask
     c = get_candidates("train", tr, args.cache, s1_mask=train_mask)
     if args.blocking_only:
@@ -434,6 +504,9 @@ def main():
     stats = TextStats(seed=CFG["seed"]).fit([tr["source1"], tr["source2"], tr["source3"]])
     c = base_scores(c, tr, stats)
     log("base scores + context done")
+    if CFG["neg_sampling"]:
+        run_scaled(args, summary, c, tr, stats, true_count, train_mask, u_s1)
+        return
     ct = c
     del c
     log(f"training subset: {train_mask.sum()} S1, {len(ct)} pairs, pos={ct.y.sum()}")

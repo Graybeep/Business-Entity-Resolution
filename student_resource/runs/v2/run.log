@@ -1,0 +1,60 @@
+[     35s] diagnostics: singletons=0.0558 shared_ids=0 cross_country=0
+[     35s] blocking train ...
+[     91s]   [na] vectorised in 38s (vocab 233221)
+[   1208s]     [na] src2 'India': 883188 x 2017799 in 1118s
+[   2345s]     [na] src2 'US': 1323633 x 3016817 in 1136s
+[   3332s]     [na] src3 'India': 883188 x 2115547 in 988s
+[   4029s]     [na] src3 'US': 1323633 x 3170056 in 697s
+C:\Users\wicke\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\sklearn\feature_extraction\text.py:557: UserWarning: The parameter 'token_pattern' will not be used since 'analyzer' != 'word'
+  warnings.warn(
+[   4125s]   [c4] vectorised in 90s (vocab 180219)
+[   4255s]     [c4] src2 'India': 883188 x 2017799 in 130s
+[   4411s]     [c4] src2 'US': 1323633 x 3016817 in 156s
+[   4522s]     [c4] src3 'India': 883188 x 2115547 in 111s
+[   4691s]     [c4] src3 'US': 1323633 x 3170056 in 169s
+[   4725s]   [ph] vectorised in 34s (vocab 206381)
+[   5167s]     [ph] src2 'India': 883188 x 2017799 in 442s
+[   5634s]     [ph] src2 'US': 1323633 x 3016817 in 466s
+[   6038s]     [ph] src3 'India': 883188 x 2115547 in 404s
+[   6305s]     [ph] src3 'US': 1323633 x 3170056 in 267s
+[   6323s]   [nm] vectorised in 17s (vocab 82503)
+[   6388s]     [nm] src2 'India': 883188 x 2017799 in 65s
+[   6497s]     [nm] src2 'US': 1323633 x 3016817 in 109s
+[   6566s]     [nm] src3 'India': 883188 x 2115547 in 69s
+[   6666s]     [nm] src3 'US': 1323633 x 3170056 in 101s
+[   6711s] blocking: pairs=32294283 recall=0.9717 RR=0.999993 cands/S1=36.6
+[   7021s] base scores + context done
+[   7021s] scaled training: 882771 S1, 32294283 pairs, pos=2968168
+[   7107s]   features 4000000/4000000
+[   7119s]   feature chunk 0 written (4000000/32294283)
+[   7202s]   features 4000000/4000000
+[   7214s]   feature chunk 1 written (8000000/32294283)
+[   7293s]   features 4000000/4000000
+[   7304s]   feature chunk 2 written (12000000/32294283)
+[   7383s]   features 4000000/4000000
+[   7394s]   feature chunk 3 written (16000000/32294283)
+[   7474s]   features 4000000/4000000
+[   7485s]   feature chunk 4 written (20000000/32294283)
+[   7563s]   features 4000000/4000000
+[   7575s]   feature chunk 5 written (24000000/32294283)
+[   7653s]   features 4000000/4000000
+[   7664s]   feature chunk 6 written (28000000/32294283)
+[   7741s]   features 4000000/4000000
+[   7753s]   feature chunk 7 written (32000000/32294283)
+[   7779s]   features 294283/294283
+[   7780s]   feature chunk 8 written (32294283/32294283)
+[   7782s] sampling: 32294283 pairs -> 16072529 training rows (pos 2968168, hard neg 7697116, easy kept 5407245)
+[   7802s] binned 16072529 rows in 20s
+[   8500s]   fold 0: best_iter=1787 (early-stop logloss on sampled rows 0.02242)
+[   9351s]   fold 1: best_iter=2165 (early-stop logloss on sampled rows 0.02257)
+[  10327s]   fold 2: best_iter=2569 (early-stop logloss on sampled rows 0.02260)
+[  11240s]   fold 3: best_iter=2317 (early-stop logloss on sampled rows 0.02253)
+[  12590s]   fold 4: best_iter=2751 (early-stop logloss on sampled rows 0.02221)
+[  13207s] CV macro F0.5 = 0.95601  t_first=0.9519 t_add=0.9519 near_tie_rate=0.0000
+[  13409s] nested 15% subset: CV macro F0.5 = 0.95593 (t_first=0.9519 t_add=0.9519)
+[  14830s]   shift: held-out India: retuned=0.8629 main=0.8426
+[  16643s]   shift: held-out US: retuned=0.9592 main=0.9545
+[  16663s]   shift: held-out India with US thresholds: 0.8593
+[  16695s]   shift: held-out US with India thresholds: 0.9253
+[  16696s] refit on 16072529 sampled rows, 2317 rounds
+[  17508s] top features: rank_rev, sim_rev, num_contained, num_best_ratio, name_rec_miss_idf, base, addr_token_set, fullname_token_set, name_phon_ratio, num_jacc, ctx_rank_s1, num_min_reldiff

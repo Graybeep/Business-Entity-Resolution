@@ -12,6 +12,7 @@ Per S1 and per source (S2, S3 separately), the union of:
 Blocking is within country label (0 cross-country true pairs in train); a record with an
 empty country joins every pool.
 """
+import os
 import time
 
 import numpy as np
@@ -104,39 +105,69 @@ class _Acc:
         return key[first], rank[first], sim[first]
 
 
-def generate_candidates(s1, s2, s3, cfg, log=print, s1_mask=None):
-    """Returns DataFrame of unique pairs (s1_pos, src 2/3, r_pos) with, per pass, the rank of
-    the pair in that pass (255 = not retrieved) and its cosine (NaN = not retrieved).
+def _pool_file(ckpt_dir, name, src, lab):
+    """Checkpoint path for one finished (pass, source, country pool)."""
+    safe = "".join(ch if ch.isalnum() else "_" for ch in (lab or "EMPTY"))
+    return os.path.join(ckpt_dir, f"{name}_src{src}_{safe}.npz")
+
+
+def generate_candidates(s1, s2, s3, cfg, log=print, s1_mask=None, ckpt_dir=None):
+    """Stage 2 entry point.  Returns DataFrame of unique pairs (s1_pos, src 2/3, r_pos) with, per
+    pass, the rank of the pair in that pass (255 = not retrieved) and its cosine (NaN = not
+    retrieved).
     s1_mask (optional, training only): forward passes run for these S1s only, and only their
     pairs are returned; the reverse pass still ranks against ALL S1s so that its rank reflects
-    the real competition."""
+    the real competition.
+    ckpt_dir (optional): every finished (pass, source, pool) is saved there as .npz; on restart
+    finished pools are loaded instead of recomputed (a pass whose pools are all saved is not even
+    vectorised).  Delete the directory whenever data, config or mask change."""
     if s1_mask is None:
         s1_mask = np.ones(len(s1), bool)
     assert len(s2) < (1 << 23) and len(s3) < (1 << 23)
     k, rev_k, threads, seed = cfg["k"], cfg["rev_k"], cfg.get("threads", 14), cfg.get("seed", 0)
+    if ckpt_dir:
+        os.makedirs(ckpt_dir, exist_ok=True)
+    pool_list = [(src, lab, p1, p2) for src, other in ((2, s2), (3, s3)) for lab, p1, p2 in pools(s1, other)]
     passes = {}
     for name, spec in PASSES.items():
         if k.get(name, 0) <= 0:
             continue
-        t = time.time()
-        txt = {1: spec["text"](s1).values, 2: spec["text"](s2).values, 3: spec["text"](s3).values}
-        vec = _vectorizer(spec, seed, np.concatenate([txt[1], txt[2], txt[3]]))
-        X = {i: par_transform(vec, v) for i, v in txt.items()}
-        del txt
-        log(f"  [{name}] vectorised in {time.time() - t:.0f}s (vocab {len(vec.vocabulary_)})")
+        files = {(src, lab): _pool_file(ckpt_dir, name, src, lab) for src, lab, _, _ in pool_list} if ckpt_dir else {}
+        all_done = bool(files) and all(os.path.exists(f) for f in files.values())
+        X = None
+        if not all_done:
+            t = time.time()
+            txt = {1: spec["text"](s1).values, 2: spec["text"](s2).values, 3: spec["text"](s3).values}
+            vec = _vectorizer(spec, seed, np.concatenate([txt[1], txt[2], txt[3]]))
+            X = {i: par_transform(vec, v) for i, v in txt.items()}
+            del txt
+            log(f"  [{name}] vectorised in {time.time() - t:.0f}s (vocab {len(vec.vocabulary_)})")
         acc, racc = _Acc(), _Acc()
-        for src, other in ((2, s2), (3, s3)):
-            for lab, p1, p2 in pools(s1, other):
-                t = time.time()
-                q1 = p1[s1_mask[p1]]
-                r, c, v = topk(X[1][q1], X[src][p2], k[name], threads)
-                acc.add(pair_key(q1[r], src, p2[c]), _rank_within(r, v), v)
-                if name == "na" and rev_k > 0:
-                    r, c, v = topk(X[src][p2], X[1][p1], rev_k, threads)
-                    rank = _rank_within(r, v)
-                    ok = s1_mask[p1[c]]
-                    racc.add(pair_key(p1[c[ok]], src, p2[r[ok]]), rank[ok], v[ok])
-                log(f"    [{name}] src{src} {lab!r}: {len(p1)} x {len(p2)} in {time.time() - t:.0f}s")
+        for src, lab, p1, p2 in pool_list:
+            f = files.get((src, lab))
+            if f and os.path.exists(f):
+                z = np.load(f)
+                acc.add(z["key"], z["rank"], z["sim"])
+                if "rkey" in z:
+                    racc.add(z["rkey"], z["rrank"], z["rsim"])
+                log(f"    [{name}] src{src} {lab!r}: loaded checkpoint")
+                continue
+            t = time.time()
+            q1 = p1[s1_mask[p1]]
+            r, c, v = topk(X[1][q1], X[src][p2], k[name], threads)
+            part = {"key": pair_key(q1[r], src, p2[c]), "rank": _rank_within(r, v), "sim": v}
+            acc.add(part["key"], part["rank"], part["sim"])
+            if name == "na" and rev_k > 0:
+                r, c, v = topk(X[src][p2], X[1][p1], rev_k, threads)
+                rank = _rank_within(r, v)
+                ok = s1_mask[p1[c]]
+                part.update(rkey=pair_key(p1[c[ok]], src, p2[r[ok]]), rrank=rank[ok], rsim=v[ok])
+                racc.add(part["rkey"], part["rrank"], part["rsim"])
+            if f:
+                tmp = f[:-4] + ".tmp.npz"
+                np.savez(tmp, **part)
+                os.replace(tmp, f)          # atomic: a killed run never leaves a half-written pool
+            log(f"    [{name}] src{src} {lab!r}: {len(p1)} x {len(p2)} in {time.time() - t:.0f}s")
         passes[name] = acc.finish()
         if racc.parts:
             passes["rev"] = racc.finish()

@@ -1,0 +1,6 @@
+[    18s] 330664 S1, 12091331 pairs
+[   454s] baseline two-threshold: 0.95364 (t_first=0.9495, t_add=0.9495)
+[   506s] owned pairs with p>1e-4: 1896431; S1s with >8: 38897
+[   559s] a=0.8 lam=0.0: all=0.96326  foldA=0.96294 foldB=0.96358
+[   610s] a=0.8 lam=0.02: all=0.96326  foldA=0.96290 foldB=0.96363
+[   652s] a=0.8 lam=0.05: all=0.96315  foldA=0.96272 foldB=0.96359

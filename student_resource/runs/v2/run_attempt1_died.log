@@ -1,0 +1,5 @@
+[     44s] diagnostics: singletons=0.0558 shared_ids=0 cross_country=0
+[     44s] blocking train ...
+[    101s]   [na] vectorised in 57s (vocab 233221)
+[   1386s]     [na] src2 'India': 883188 x 2017799 in 1274s
+[   2757s]     [na] src2 'US': 1323633 x 3016817 in 1371s

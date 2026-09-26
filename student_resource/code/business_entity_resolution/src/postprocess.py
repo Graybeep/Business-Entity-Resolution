@@ -103,7 +103,10 @@ def tune_thresholds(s1_codes, rid_codes, prob, is_match, true_count, n_s1, n_q=5
     then a fine local refinement.  Returns (score, t_first, t_add)."""
     dec = Decider(s1_codes, rid_codes, prob, use_owner)
     score = lambda tf, ta: macro_f05_arrays(s1_codes, is_match, dec.keep(tf, ta), true_count, n_s1)
-    qs = np.unique(np.quantile(prob, np.linspace(0.01, 0.99, n_q)))
+    # quantiles of the scores that can be kept: over all pairs, ~97 % sit near 0 and a coarse grid
+    # jumps straight from ~0.02 to ~0.99 (n_q=30 tuned 0.95 instead of ~0.6 on run-2 OOF)
+    live = prob[prob >= 0.01]
+    qs = np.unique(np.quantile(live if len(live) else prob, np.linspace(0.0, 0.99, n_q)))
     best = (-1.0, 0.5, 0.5)
     for tf in qs:
         for ta in qs:

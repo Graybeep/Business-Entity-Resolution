@@ -11,3 +11,9 @@ __pycache__/
 # OS
 .DS_Store
 Thumbs.db
+# large run / submission artefacts (the log and summaries stay tracked)
+student_resource/runs/**/*.tsv
+student_resource/runs/**/*.parquet
+student_resource/runs/**/*.npy
+student_resource/submissions/*.tsv
+!student_resource/submissions/log.tsv

@@ -1,0 +1,28 @@
+[      0s] predict-only: models [1] from v2_model_stage*.txt, t_first=0.7254 t_add=0.7054
+C:\Users\wicke\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\joblib\externals\loky\process_executor.py:782: UserWarning: A worker stopped while some jobs were given to the executor. This can be caused by a too short worker timeout or by a memory leak.
+  warnings.warn(
+[    992s]   features 5526975/5526975
+[   1152s]   stage-1 predicted 5526975/63846924
+[   1286s]   features 5509393/5509393
+[   1448s]   stage-1 predicted 11036368/63846924
+[   1585s]   features 5538621/5538621
+[   1747s]   stage-1 predicted 16574989/63846924
+[   1880s]   features 5537172/5537172
+[   2042s]   stage-1 predicted 22112161/63846924
+[   2177s]   features 5534539/5534539
+[   2337s]   stage-1 predicted 27646700/63846924
+[   2471s]   features 5534755/5534755
+[   2658s]   stage-1 predicted 33181455/63846924
+[   2812s]   features 5524093/5524093
+[   3017s]   stage-1 predicted 38705548/63846924
+[   3177s]   features 5520687/5520687
+[   3382s]   stage-1 predicted 44226235/63846924
+[   3536s]   features 5526199/5526199
+[   3734s]   stage-1 predicted 49752434/63846924
+[   3891s]   features 5510399/5510399
+[   4092s]   stage-1 predicted 55262833/63846924
+[   4293s]   features 5547170/5547170
+[   4499s]   stage-1 predicted 60810003/63846924
+[   4608s]   features 3036921/3036921
+[   4683s]   stage-1 predicted 63846924/63846924
+[   5021s] test: 5481921 matched pairs written
