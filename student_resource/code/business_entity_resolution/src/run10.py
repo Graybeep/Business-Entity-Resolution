@@ -163,12 +163,14 @@ def r2feats(split):
     r2["_i"] = np.arange(len(r2))
     feats = np.lib.format.open_memmap(cp(f"{split}_r2_feats.npy"), mode="w+", dtype=np.float32,
                                       shape=(len(r2), len(names)))
+    base2 = np.full(len(r2), np.nan, np.float32)        # union-context base score (density matching)
     for c_ in sorted(x for x in np.unique(cty) if x):
         m1 = cty[r1.s1_pos.values] == c_
         m2 = cty[r2.s1_pos.values] == c_
         u = pd.concat([r1[m1].assign(_i=-1), r2[m2].assign(**{k: np.nan for k in PASS_COLS})], ignore_index=True)
         u = PL.base_scores(u, data, stats)
         new = u[u._i.values >= 0]
+        base2[new._i.values] = new.base.values
         del u
         for b in range(0, len(new), CHUNK):
             part = new.iloc[b:b + CHUNK]
@@ -176,6 +178,7 @@ def r2feats(split):
         del new
         log(f"  r2feats {split} {c_}: {int(m2.sum())} pairs")
     feats.flush()
+    np.save(cp(f"{split}_r2_base.npy"), base2)
     if split == "train":
         fpath = os.path.join(CACHE, "v2_folds.npy")
         folds = np.load(fpath) if os.path.exists(fpath) or not SMOKE else             np.zeros(len(pd.read_parquet(os.path.join(CACHE, "v2_oof_pairs.parquet"), columns=["s1_pos"])), np.int64)
