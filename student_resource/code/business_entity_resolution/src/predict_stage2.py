@@ -10,6 +10,13 @@ the full 64M-pair set (memory).  Max / gap / rank / n_hi are unchanged by droppi
 the P sums and best-other values shift by at most the dropped mass (< 1e-4 per pair).
 
 python predict_stage2.py --out runs/v3 --t-first 0.533 --t-add 0.794
+
+Optional (prepared, NOT run): --stage1-folds replaces the run-8 refit stage-1 probabilities with the
+average of the five fold models (cache/v2_stage1_fold{0..4}.txt, see train_fold_models.py) on every
+pair whose refit P >= FOLD_MIN, so stage 2 sees stage-1 scores distributed like its OOF training
+input.  Pairs below FOLD_MIN keep the refit P (they are far below any threshold).  Stage-2
+thresholds are unchanged.  Use only if run 9's LB gain over run 2 is < +0.003.
+python predict_stage2.py --stage1-folds --out runs/v4 --prob-out v4_test_prob.npy --t-first 0.533 --t-add 0.794
 """
 import argparse
 import json
@@ -27,6 +34,7 @@ from features import TextStats  # noqa: E402
 from postprocess import Decider  # noqa: E402
 from stage2_sibling import P_MIN, sibling_features  # noqa: E402
 
+FOLD_MIN = 1e-3
 T0 = time.time()
 
 
@@ -43,6 +51,8 @@ def main():
     ap.add_argument("--out", default="runs/v3")
     ap.add_argument("--t-first", type=float, required=True)
     ap.add_argument("--t-add", type=float, required=True)
+    ap.add_argument("--stage1-folds", action="store_true", help="average the 5 stage-1 fold models (prepared option)")
+    ap.add_argument("--prob-out", default="v3_test_prob.npy")
     args = ap.parse_args()
     os.makedirs(args.out, exist_ok=True)
 
@@ -51,21 +61,29 @@ def main():
     ct = ct.sort_values(["s1_pos", "src", "r_pos"]).reset_index(drop=True)
     p1 = np.load(os.path.join(args.cache, "v2_test_prob.npy")).astype(np.float32)
     assert len(p1) == len(ct), "run-8 test probabilities do not match the candidate set"
-    rows = np.flatnonzero(p1 >= P_MIN)
-    log(f"{len(ct)} test pairs, {len(rows)} with stage-1 P >= {P_MIN}")
-
     stats = TextStats(seed=CFG["seed"]).fit([te["source1"], te["source2"], te["source3"]])
     ct = base_scores(ct, te, stats)                       # context columns need the full candidate set
     model = lgb.Booster(model_file=os.path.join(args.cache, "v3_stage2_model.txt"))
     names = model.feature_name()
     stage1_names = lgb.Booster(model_file=os.path.join(args.cache, "v2_model_stage1.txt")).feature_name()
+    feat_rows = np.flatnonzero(p1 >= (FOLD_MIN if args.stage1_folds else P_MIN))
     parts = []
-    for a in range(0, len(rows), 1_000_000):
-        r = rows[a:a + 1_000_000]
+    for a in range(0, len(feat_rows), 1_000_000):
+        r = feat_rows[a:a + 1_000_000]
         parts.append(build_features(ct.iloc[r], te, stats)[stage1_names].values.astype(np.float32))
-        log(f"  stage-1 features {a + len(r)}/{len(rows)}")
-    X1 = np.vstack(parts)
+        log(f"  stage-1 features {a + len(r)}/{len(feat_rows)}")
+    F = np.vstack(parts)
     del parts
+    if args.stage1_folds:
+        folds = [lgb.Booster(model_file=os.path.join(args.cache, f"v2_stage1_fold{f}.txt")) for f in range(5)]
+        p1[feat_rows] = np.mean([m.predict(F) for m in folds], axis=0).astype(np.float32)
+        log(f"stage-1 fold average on {len(feat_rows)} pairs with refit P >= {FOLD_MIN}")
+    rows = np.flatnonzero(p1 >= P_MIN)
+    if args.stage1_folds:
+        rows = rows[np.isin(rows, feat_rows)]            # pairs below FOLD_MIN keep refit P < P_MIN
+    X1 = F[np.searchsorted(feat_rows, rows)]
+    del F
+    log(f"{len(ct)} test pairs, {len(rows)} with stage-1 P >= {P_MIN}")
     keys = ct[["s1_pos", "src", "r_pos"]].copy()
     del ct
 
@@ -86,7 +104,7 @@ def main():
         "stage-2 feature layout differs from the trained model"
     p = p1.copy()
     p[rows] = model.predict(X)
-    np.save(os.path.join(args.cache, "v3_test_prob.npy"), p)
+    np.save(os.path.join(args.cache, args.prob_out), p)
     log("stage-2 predicted")
 
     s1_ids = np.asarray(te["source1"].entity_id.values, dtype=object)

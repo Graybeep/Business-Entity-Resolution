@@ -77,11 +77,13 @@ def predict_rows(fdir, model, row_mask, num_iteration=None):
     return out
 
 
-def scaled_cv(fdir, feat_names, meta, cfg_lgb, cfg, log):
+def scaled_cv(fdir, feat_names, meta, cfg_lgb, cfg, log, save_prefix=None, predict_oof=True):
     """Stage 4 grouped CV with negative subsampling in training folds only.
     Input: chunk store, feature names, meta (s1_pos, y, ctx ranks) aligned with the store.
     Output: dict with full-candidate OOF probabilities, best iterations, the sampled-row index
-    and the binned LightGBM Dataset over the sampled rows (reused for refit / shift check)."""
+    and the binned LightGBM Dataset over the sampled rows (reused for refit / shift check).
+    save_prefix: if set, each fold model is saved as <save_prefix>_fold{f}.txt (for test-time fold
+    averaging).  predict_oof=False skips the full-candidate OOF streaming (fold models only)."""
     ns = cfg["neg_sampling"]
     y = meta.y.values.astype(np.int8)
     hard = hard_negative_mask(meta, ns["hard_rank_s1"], ns["hard_rank_rec"])
@@ -109,8 +111,11 @@ def scaled_cv(fdir, feat_names, meta, cfg_lgb, cfg, log):
                       valid_sets=[full.subset(va_idx)],
                       callbacks=[lgb.early_stopping(cfg["early_stopping"], verbose=False)])
         best.append(m.best_iteration)
-        p = predict_rows(fdir, m, folds == f, num_iteration=m.best_iteration)   # FULL candidate set
-        oof[folds == f] = p[folds == f]
+        if save_prefix:
+            m.save_model(f"{save_prefix}_fold{f}.txt", num_iteration=m.best_iteration)
+        if predict_oof:
+            p = predict_rows(fdir, m, folds == f, num_iteration=m.best_iteration)   # FULL candidate set
+            oof[folds == f] = p[folds == f]
         log(f"  fold {f}: best_iter={m.best_iteration} (early-stop logloss on sampled rows "
             f"{m.best_score['valid_0']['binary_logloss']:.5f})")
     return {"oof": oof, "best_iters": best, "rows": rows, "full": full, "folds": folds}
