@@ -334,7 +334,8 @@ python3 utils/validate_submission.py --matching output/matching_results.tsv \
   positives and false negatives from the out-of-fold predictions.
 - **Every function gets a docstring** saying what it does, its inputs and outputs, and which stage
   it belongs to. This is a guidelines requirement, not style.
-- **Test data is for inference only.** Never read the test files to choose thresholds or features.
+- **Test data is for inference only.** Test inputs may be inspected to find normalisation failures
+  on unseen formats (no test labels exist). Thresholds and model choices are never tuned on test.
 - **Deterministic runs:** fixed seeds, IDs sorted before writing.
 - **No network calls** in the pipeline. `pip install` is the only allowed network use.
 - **When unsure whether something counts as "external data",** don't use it, and flag it to the
