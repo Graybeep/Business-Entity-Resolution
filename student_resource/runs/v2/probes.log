@@ -1,0 +1,24 @@
+t_first 0.7254 -> 0.7254 for ALL (1732544 S1 rows); t_add 0.7054 unchanged
+ALL rows non-empty -> empty: 0
+ALL rows otherwise changed: 0
+non-ALL rows changed: 0; pairs removed: 0
+ALIGNMENT OK: delta-0 identical to runs/v2
+t_first 0.7254 -> 0.6954 for ALL (1732544 S1 rows); t_add 0.7054 unchanged
+ALL rows non-empty -> empty: 0
+ALL rows otherwise changed: 1200
+non-ALL rows changed: 0; pairs removed: -1209
+t_first 0.7254 -> 0.7754 for France (259452 S1 rows); t_add 0.7054 unchanged
+France rows non-empty -> empty: 343
+France rows otherwise changed: 0
+non-France rows changed: 0; pairs removed: 360
+t_first 0.7254 -> 0.6754 for France (259452 S1 rows); t_add 0.7054 unchanged
+France rows non-empty -> empty: 0
+France rows otherwise changed: 334
+non-France rows changed: 0; pairs removed: -335
+== validate E_run8_tfirst-0.03_all
+PASS — no blocking issues found. Safe to submit.
+== validate B_run8_tfirst+0.05_france
+PASS — no blocking issues found. Safe to submit.
+== validate C_run8_tfirst-0.05_france
+PASS — no blocking issues found. Safe to submit.
+PROBES DONE
