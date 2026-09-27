@@ -1,0 +1,37 @@
+{
+  "frac": 0.529,
+  "t_first": 0.4781021016714521,
+  "t_add": 0.7599183209574951,
+  "pred_pairs": 5562110,
+  "competitor_counts": {
+    "France": {
+      "pair_mean_before": 35.74080276489258,
+      "pair_mean_after": 19.447532653808594,
+      "pair_median_before": 14.0,
+      "pair_median_after": 8.0,
+      "p90_before": 81.0,
+      "p90_after": 44.0
+    },
+    "India": {
+      "pair_mean_before": 48.569580078125,
+      "pair_mean_after": 26.176753997802734,
+      "pair_median_before": 11.0,
+      "pair_median_after": 6.0,
+      "p90_before": 90.0,
+      "p90_after": 49.0
+    },
+    "US": {
+      "pair_mean_before": 72.0626449584961,
+      "pair_mean_after": 38.522525787353516,
+      "pair_median_before": 11.0,
+      "pair_median_after": 6.0,
+      "p90_before": 191.0,
+      "p90_after": 102.0
+    }
+  },
+  "pred_singleton_fraction_by_country": {
+    "France": 0.06368037247737535,
+    "India": 0.0640085137273978,
+    "US": 0.05901469749934396
+  }
+}

@@ -1,0 +1,71 @@
+=== density_match 01:07
+[    91s] hash draw: 0.5291 of test S1s (target fraction 0.529)
+[    383s]   features 1773379/1773379
+[   444s]   France: stage 1 re-scored 1773379 round-1 + 260130 round-2 pairs
+[   583s]   France: stage 2 re-scored 1289556 rows
+[   584s]   France competitor count (round-1 pairs, ctx_n_rec): {'pair_mean_before': 35.74080276489258, 'pair_mean_after': 19.447532653808594, 'pair_median_before': 14.0, 'pair_median_after': 8.0, 'p90_before': 81.0, 'p90_after': 44.0}
+[   1173s]   features 2000000/2000000
+[   1225s]   features 2000000/2000000
+[   1263s]   features 719707/719707
+[  1443s]   India: stage 1 re-scored 4719707 round-1 + 1498052 round-2 pairs
+[  1854s]   India: stage 2 re-scored 4280089 rows
+[  1857s]   India competitor count (round-1 pairs, ctx_n_rec): {'pair_mean_before': 48.569580078125, 'pair_mean_after': 26.176753997802734, 'pair_median_before': 11.0, 'pair_median_after': 6.0, 'p90_before': 90.0, 'p90_after': 49.0}
+[   2296s]   features 2000000/2000000
+[   2341s]   features 2000000/2000000
+[   2364s]   features 215356/215356
+[  2498s]   US: stage 1 re-scored 4215356 round-1 + 739540 round-2 pairs
+[  2800s]   US: stage 2 re-scored 3339687 rows
+[  2802s]   US competitor count (round-1 pairs, ctx_n_rec): {'pair_mean_before': 72.0626449584961, 'pair_mean_after': 38.522525787353516, 'pair_median_before': 11.0, 'pair_median_after': 6.0, 'p90_before': 191.0, 'p90_after': 102.0}
+[  3480s] done: {'frac': 0.529, 't_first': 0.4781021016714521, 't_add': 0.7599183209574951, 'pred_pairs': 5562110, 'competitor_counts': {'France': {'pair_mean_before': 35.74080276489258, 'pair_mean_after': 19.447532653808594, 'pair_median_before': 14.0, 'pair_median_after': 8.0, 'p90_before': 81.0, 'p90_after': 44.0}, 'India': {'pair_mean_before': 48.569580078125, 'pair_mean_after': 26.176753997802734, 'pair_median_before': 11.0, 'pair_median_after': 6.0, 'p90_before': 90.0, 'p90_after': 49.0}, 'US': {'pair_mean_before': 72.0626449584961, 'pair_mean_after': 38.522525787353516, 'pair_median_before': 11.0, 'pair_median_after': 6.0, 'p90_before': 191.0, 'p90_after': 102.0}}, 'pred_singleton_fraction_by_country': {'France': 0.06368037247737535, 'India': 0.0640085137273978, 'US': 0.05901469749934396}}
+=== DM-DONE 02:05
+=== ablation stage1 02:05
+[    19s] binned 16072529 sampled rows x 64 features
+[  1247s]   fold 0: best_iter=2461 logloss=0.02330
+[  2089s]   fold 1: best_iter=2504 logloss=0.02344
+[  3331s]   fold 2: best_iter=2625 logloss=0.02350
+[  4371s]   fold 3: best_iter=2372 logloss=0.02338
+[  5438s]   fold 4: best_iter=2327 logloss=0.02319
+[  6679s] OOF stage-1 scores saved; refit
+[  8167s] stage 1 done; best iters [2461, 2504, 2625, 2372, 2327]
+=== ablation stage2 04:21
+[    29s] union train all: 46796147 pairs (14501864 round 2); stage-2 rows 6607788 (2628702 round 2)
+[   579s]   context / sibling / name-frequency features done
+[   782s]   s2 fold 0: best_iter=832
+[  1012s]   s2 fold 1: best_iter=939
+[  1239s]   s2 fold 2: best_iter=888
+[  1402s]   s2 fold 3: best_iter=801
+[  1557s]   s2 fold 4: best_iter=777
+[  1733s] RESULT ablation full40: 0.97520 (tf 0.559 ta 0.624)
+[  1803s] RESULT ablation India: 0.96750 (tf 0.424 ta 0.709)
+[  1903s] RESULT ablation US: 0.98011 (tf 0.555 ta 0.861)
+[  1903s]   run 10 reference: full40 0.97609 / India 0.96807 / US 0.98127
+=== ablation test 04:56
+[    293s]   features 1773379/1773379
+[   335s]   test France: ablation stage 1 on 1773379 round-1 pairs
+[    648s]   features 2000000/2000000
+[    746s]   features 2000000/2000000
+[    825s]   features 719707/719707
+[   842s]   test India: ablation stage 1 on 4719707 round-1 pairs
+[   1053s]   features 2000000/2000000
+[   1140s]   features 2000000/2000000
+[   1209s]   features 215356/215356
+[  1214s]   test US: ablation stage 1 on 4215356 round-1 pairs
+[  1407s] union test France: 14199649 pairs (4075550 round 2); stage-2 rows 1420032 (215771 round 2)
+[  1550s]   context / sibling / name-frequency features done
+[   1835s]   features 1204261/1204261
+[  1835s]   round-1 stage-1 features test France: 1204261 rows
+[  1857s]   test France: stage 2 scored
+[  1961s] union test India: 42585060 pairs (12368464 round 2); stage-2 rows 4606877 (1253787 round 2)
+[  2366s]   context / sibling / name-frequency features done
+[   2857s]   features 2000000/2000000
+[   2895s]   features 1353090/1353090
+[  2896s]   round-1 stage-1 features test India: 3353090 rows
+[  2953s]   test India: stage 2 scored
+[  3059s] union test US: 33371958 pairs (9865729 round 2); stage-2 rows 3629441 (638373 round 2)
+[  3366s]   context / sibling / name-frequency features done
+[   3755s]   features 2000000/2000000
+[   3782s]   features 991068/991068
+[  3782s]   round-1 stage-1 features test US: 2991068 rows
+[  3829s]   test US: stage 2 scored
+[  4449s] test done: {'t_first': 0.5587412128156544, 't_add': 0.6237412128156544, 'pred_pairs': 5619387, 'pred_singleton_fraction_by_country': {'France': 0.06497540970969584, 'India': 0.06520853446849695, 'US': 0.05981095028547467}}
+ALL-DONE 06:10

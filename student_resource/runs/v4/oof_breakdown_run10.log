@@ -1,0 +1,4 @@
+run 10 OOF (40 %) macro F0.5 0.97609
+== India: F0.5 0.9682, loss 0.0318 | singleton FP 0.0029 (9%) | FP on matched 0.0043 (14%) | model misses 0.0113 (36%) | blocking misses 0.0133 (42%) | recall 0.9697
+== US: F0.5 0.9814, loss 0.0186 | singleton FP 0.0015 (8%) | FP on matched 0.0023 (12%) | model misses 0.0118 (63%) | blocking misses 0.0030 (16%) | recall 0.9937
+run 8 reference (row 14): India 0.9567 loss 0.0433 = 8/18/30/44 %; US 0.9751 loss 0.0249 = 7/17/60/16 %

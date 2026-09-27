@@ -1,0 +1,118 @@
+##### SMOKE test side
+=== smoke expand test
+[   119s]   expand test France: d 5793 hits, c 58402 hits from 5365 anchors
+[   165s]   expand test India: d 22090 hits, c 176143 hits from 16040 anchors
+[   195s]   expand test US: d 22882 hits, c 145670 hits from 13250 anchors
+[   195s] expand test: 109444 round-2 pairs = 15.8 per S1
+=== smoke r2feats test
+[    101s]   features 16487/16487
+[   101s]   r2feats test France: 16487 pairs
+[    115s]   features 52255/52255
+[   115s]   r2feats test India: 52255 pairs
+[    126s]   features 40702/40702
+[   126s]   r2feats test US: 40702 pairs
+[   129s] r2feats test: done; stage-1 P >= 0.001 on 0.232 of round-2 pairs
+=== smoke s2test
+[   102s] union test France: 57206 pairs (16487 round 2); stage-2 rows 7828 (3159 round 2)
+[   125s]   context / sibling / name-frequency features done
+[    308s]   features 4669/4669
+[   308s]   round-1 stage-1 features test France: 4669 rows
+[   308s]   s2test France scored
+[   407s] union test India: 173135 pairs (52255 round 2); stage-2 rows 26397 (13399 round 2)
+[   433s]   context / sibling / name-frequency features done
+[    615s]   features 12998/12998
+[   615s]   round-1 stage-1 features test India: 12998 rows
+[   615s]   s2test India scored
+[   714s] union test US: 133938 pairs (40702 round 2); stage-2 rows 20363 (8782 round 2)
+[   738s]   context / sibling / name-frequency features done
+[    920s]   features 11581/11581
+[   920s]   round-1 stage-1 features test US: 11581 rows
+[   920s]   s2test US scored
+[   930s] s2test: {'t_first': 0.6977044323025917, 't_add': 0.7327044323025917, 'pred_pairs': 22595, 'candidates_per_s1': 0.21025670920911677, 'pred_singleton_fraction_by_country': {'France': 0.9960763455282673, 'India': 0.996288824745119, 'US': 0.9962524845198204}}
+##### RUN 10 FULL
+=== folds 17:50
+[    338s] sampling: 32294283 pairs -> 16072529 training rows (pos 2968168, hard neg 7697116, easy kept 5407245)
+[    355s] binned 16072529 rows in 17s
+[    964s]   fold 0: best_iter=1787 (early-stop logloss on sampled rows 0.02242)
+[   1771s]   fold 1: best_iter=2165 (early-stop logloss on sampled rows 0.02257)
+[   2742s]   fold 2: best_iter=2569 (early-stop logloss on sampled rows 0.02260)
+[   3577s]   fold 3: best_iter=2317 (early-stop logloss on sampled rows 0.02253)
+[   4534s]   fold 4: best_iter=2801 (early-stop logloss on sampled rows 0.02223)
+[   4534s] fold models saved; best iterations [1787, 2165, 2569, 2317, 2801] (run 8: [1787, 2165, 2569, 2317, 2751])
+=== expand train 19:05
+[  1517s]   expand train India: d 2138829 hits, c 19391667 hits from 1767210 anchors
+[  3776s]   expand train US: d 4340840 hits, c 29097304 hits from 2646645 anchors
+[  3782s] expand train: 14501864 round-2 pairs = 16.4 per S1
+=== r2feats train 20:08
+[    259s]   features 2000000/2000000
+[    299s]   features 2000000/2000000
+[    338s]   features 2000000/2000000
+[    345s]   features 55622/55622
+[   345s]   r2feats train India: 6055622 pairs
+[    567s]   features 2000000/2000000
+[    607s]   features 2000000/2000000
+[    648s]   features 2000000/2000000
+[    689s]   features 2000000/2000000
+[    712s]   features 446242/446242
+[   713s]   r2feats train US: 8446242 pairs
+[  1047s] r2feats train: done; stage-1 P >= 0.001 on 0.091 of round-2 pairs
+=== s2train 20:26
+[    27s] union train all: 46796147 pairs (14501864 round 2); stage-2 rows 5205607 (1326050 round 2)
+[   490s]   context / sibling / name-frequency features done
+[   626s]   s2 fold 0: best_iter=598 logloss=0.05826
+[   750s]   s2 fold 1: best_iter=787 logloss=0.05726
+[   881s]   s2 fold 2: best_iter=750 logloss=0.05776
+[   982s]   s2 fold 3: best_iter=551 logloss=0.05715
+[  1096s]   s2 fold 4: best_iter=656 logloss=0.05700
+[  1269s] RESULT run 10 full40: 0.97609 (tf 0.478 ta 0.760)
+[  1331s] RESULT run 10 nested15: 0.97609 (tf 0.485 ta 0.768)
+[  1396s] RESULT run 10 India: 0.96807 (tf 0.536 ta 0.804)
+[  1495s] RESULT run 10 US: 0.98127 (tf 0.428 ta 0.720)
+[  1495s]   run 9 reference: full40 0.97233 / nested15 0.97232 / India 0.96246 / US 0.97871
+[  1495s] union candidate recall 0.9841 (run 9: 0.9717); candidates/S1 53.0
+[  1658s] saved r10_stage2_model.txt; top features: p1, p1_s1_gap, p1_rec_best_other, p1_rec_max, rank_na, p1_rec_sum, p1_s1_max, nf_s1_same_rcore, sib_pmass, sib_num_eq_frac, sib_num_jacc_max, sib_addr_max, nf_rec_same_rcore, p1_s1_sum, num_contained
+=== expand test 20:54
+[   296s]   expand test France: d 1477669 hits, c 14107750 hits from 1297260 anchors
+[  4249s]   expand test India: d 4879675 hits, c 44477086 hits from 4049930 anchors
+[  6168s]   expand test US: d 5330372 hits, c 36448675 hits from 3315530 anchors
+[  6193s] expand test: 26309743 round-2 pairs = 15.2 per S1
+=== r2feats test 22:37
+[    325s]   features 2000000/2000000
+[    377s]   features 2000000/2000000
+[    395s]   features 75550/75550
+[   395s]   r2feats test France: 4075550 pairs
+[    889s]   features 2000000/2000000
+[    945s]   features 2000000/2000000
+[   1003s]   features 2000000/2000000
+[   1062s]   features 2000000/2000000
+[   1144s]   features 2000000/2000000
+[   1214s]   features 2000000/2000000
+[   1259s]   features 368464/368464
+[  1260s]   r2feats test India: 12368464 pairs
+[   1704s]   features 2000000/2000000
+[   1788s]   features 2000000/2000000
+[   1863s]   features 2000000/2000000
+[   1938s]   features 2000000/2000000
+[   2005s]   features 1865729/1865729
+[  2010s]   r2feats test US: 9865729 pairs
+[  2883s] r2feats test: done; stage-1 P >= 0.001 on 0.046 of round-2 pairs
+=== s2test 23:25
+[   139s] union test France: 14199649 pairs (4075550 round 2); stage-2 rows 1204112 (112260 round 2)
+[   378s]   context / sibling / name-frequency features done
+[    661s]   features 1091852/1091852
+[   661s]   round-1 stage-1 features test France: 1091852 rows
+[   677s]   s2test France scored
+[   783s] union test India: 42585060 pairs (12368464 round 2); stage-2 rows 4062199 (769392 round 2)
+[  1157s]   context / sibling / name-frequency features done
+[   1754s]   features 2000000/2000000
+[   1814s]   features 1292807/1292807
+[  1814s]   round-1 stage-1 features test India: 3292807 rows
+[  1874s]   s2test India scored
+[  2006s] union test US: 33371958 pairs (9865729 round 2); stage-2 rows 3200597 (323242 round 2)
+[  2561s]   context / sibling / name-frequency features done
+[   3131s]   features 2000000/2000000
+[   3177s]   features 877355/877355
+[  3178s]   round-1 stage-1 features test US: 2877355 rows
+[  3219s]   s2test US scored
+[  3897s] s2test: {'t_first': 0.4781021016714521, 't_add': 0.7599183209574951, 'pred_pairs': 5554870, 'candidates_per_s1': 52.03715865224779, 'pred_singleton_fraction_by_country': {'France': 0.06437028814578416, 'India': 0.06433567987594846, 'US': 0.059304243967027936}}
+RUN10-ALL-DONE 00:30

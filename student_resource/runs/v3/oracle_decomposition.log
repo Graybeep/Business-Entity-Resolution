@@ -1,0 +1,8 @@
+run 9 OOF (40 %): 0.97233; loss 0.02767
+  oracle remove all false positives               +0.00519
+  oracle add missed empty-address true pairs      +0.00561
+  oracle add missed has-address true pairs        +0.00712
+  oracle blocking (all true pairs in candidates, rest unchanged) +0.00982  [scores as if missed-by-blocking pairs did not exist]
+  oracle everything on current candidates: 0.99002; with perfect blocking 1.0
+  India: blocking-miss share of truth 0.0514
+  US: blocking-miss share of truth 0.0129

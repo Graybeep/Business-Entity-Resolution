@@ -28,9 +28,10 @@ def main():
     """Rebuild run-8 meta, then run the grouped fold training with model saving and no OOF pass."""
     PL.CFG["train_s1_frac"] = 0.4
     PL.CFG["neg_sampling"] = dict(PL.NEG_SAMPLING_DEFAULT)
-    cache = "cache"
-    tr = load_split("dataset", "train", cache)
-    _, pairs = load_ground_truth("dataset")
+    cache = os.environ.get("ER_CACHE", "cache")
+    data_dir = os.environ.get("ER_DATA", "dataset")
+    tr = load_split(data_dir, "train", cache)
+    _, pairs = load_ground_truth(data_dir)
     u_s1 = np.random.default_rng(PL.CFG["seed"]).random(len(tr["source1"]))
     train_mask = u_s1 < PL.CFG["train_s1_frac"]
     c = PL.get_candidates("train", tr, cache, s1_mask=train_mask)          # cached train_cands_f0.4

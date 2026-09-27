@@ -1,0 +1,32 @@
+ML Challenge 2026 — submission validator
+  test dir: dataset/test
+  required S1 entities: 1732544
+  valid S2/S3 match IDs: 9969589
+  matching_results.tsv: 1732544 rows (108137 empty, 1624407 non-empty).
+  candidate_pairs.tsv: 1732544 rows (0 empty, 1732544 non-empty).
+
+PASS — no blocking issues found. Safe to submit.
+wrote team_provisional_run10_submission.zip (outputs from runs/v4):
+   output/matching_results.tsv
+   output/candidate_pairs.tsv
+   Documentation_template.md
+   code/business_entity_resolution/README.md
+   code/business_entity_resolution/requirements.txt
+   code/business_entity_resolution/run_all.sh
+   code/business_entity_resolution/src/ablation.py
+   code/business_entity_resolution/src/blocking.py
+   code/business_entity_resolution/src/blocking_passes_eval.py
+   code/business_entity_resolution/src/data.py
+   code/business_entity_resolution/src/density_match.py
+   code/business_entity_resolution/src/features.py
+   code/business_entity_resolution/src/normalize.py
+   code/business_entity_resolution/src/pipeline.py
+   code/business_entity_resolution/src/postprocess.py
+   code/business_entity_resolution/src/predict_stage2.py
+   code/business_entity_resolution/src/probe_france.py
+   code/business_entity_resolution/src/run10.py
+   code/business_entity_resolution/src/shift_diag.py
+   code/business_entity_resolution/src/smoke_dataset.py
+   code/business_entity_resolution/src/stage2_sibling.py
+   code/business_entity_resolution/src/train_fold_models.py
+   code/business_entity_resolution/src/training_scaled.py

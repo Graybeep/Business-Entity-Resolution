@@ -1,0 +1,148 @@
+  normalised train/source1: 110714 rows
+  normalised train/source2: 427956 rows
+  normalised train/source3: 452322 rows
+[     24s] diagnostics: singletons=0.0552 shared_ids=0 cross_country=0
+[     24s] blocking train ...
+[     41s]   [na] vectorised in 16s (vocab 165618)
+[     41s]     [na] src2 'India': 44400 x 171376 in 1s
+[     42s]     [na] src2 'US': 66314 x 256580 in 1s
+[     43s]     [na] src3 'India': 44400 x 181297 in 1s
+[     44s]     [na] src3 'US': 66314 x 271025 in 1s
+C:\Users\wicke\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\sklearn\feature_extraction\text.py:557: UserWarning: The parameter 'token_pattern' will not be used since 'analyzer' != 'word'
+  warnings.warn(
+[     84s]   [c4] vectorised in 40s (vocab 152695)
+[     85s]     [c4] src2 'India': 44400 x 171376 in 0s
+[     85s]     [c4] src2 'US': 66314 x 256580 in 0s
+[     85s]     [c4] src3 'India': 44400 x 181297 in 0s
+[     85s]     [c4] src3 'US': 66314 x 271025 in 0s
+[     99s]   [ph] vectorised in 14s (vocab 144885)
+[     99s]     [ph] src2 'India': 44400 x 171376 in 1s
+[    100s]     [ph] src2 'US': 66314 x 256580 in 1s
+[    100s]     [ph] src3 'India': 44400 x 181297 in 0s
+[    101s]     [ph] src3 'US': 66314 x 271025 in 0s
+[    106s]   [nm] vectorised in 6s (vocab 61151)
+[    106s]     [nm] src2 'India': 44400 x 171376 in 0s
+[    107s]     [nm] src2 'US': 66314 x 256580 in 0s
+[    107s]     [nm] src3 'India': 44400 x 181297 in 0s
+[    107s]     [nm] src3 'US': 66314 x 271025 in 0s
+[    109s] blocking: pairs=1800531 recall=0.9907 RR=0.999911 cands/S1=40.9
+[    167s] base scores + context done
+[    167s] scaled training: 44045 S1, 1800531 pairs, pos=150962
+[    203s]   features 1800531/1800531
+[    208s]   feature chunk 0 written (1800531/1800531)
+[    208s] sampling: 1800531 pairs -> 1032101 training rows (pos 150962, hard neg 625079, easy kept 256060)
+[    209s] binned 1032101 rows in 2s
+[    223s]   fold 0: best_iter=206 (early-stop logloss on sampled rows 0.01125)
+[    236s]   fold 1: best_iter=188 (early-stop logloss on sampled rows 0.01209)
+[    251s]   fold 2: best_iter=194 (early-stop logloss on sampled rows 0.01199)
+[    262s]   fold 3: best_iter=182 (early-stop logloss on sampled rows 0.01170)
+[    274s]   fold 4: best_iter=202 (early-stop logloss on sampled rows 0.01201)
+[    306s] CV macro F0.5 = 0.98233  t_first=0.8497 t_add=0.8497 near_tie_rate=0.0000
+[    316s] nested 15% subset: CV macro F0.5 = 0.98208 (t_first=0.4387 t_add=0.8516)
+[    316s] refit on 1032101 sampled rows, 194 rounds
+[    327s] top features: sim_rev, sim_na, base, rank_rev, name_phon_ratio, addr_token_set, num_contained, name_partial, sim_ph, num_best_ratio, name_rec_miss_idf, name_jw
+[      0s] predict-only: models [1] from v2_model_stage*.txt, t_first=0.8497 t_add=0.8497
+  normalised test/source1: 87181 rows
+  normalised test/source2: 244544 rows
+  normalised test/source3: 254308 rows
+[     18s] blocking test ...
+[     31s]   [na] vectorised in 13s (vocab 135642)
+[     31s]     [na] src2 'France': 12987 x 35192 in 0s
+[     32s]     [na] src2 'India': 40942 x 115282 in 0s
+[     32s]     [na] src2 'US': 33252 x 94070 in 0s
+[     32s]     [na] src3 'France': 12987 x 36675 in 0s
+[     33s]     [na] src3 'India': 40942 x 120610 in 1s
+[     33s]     [na] src3 'US': 33252 x 97023 in 0s
+C:\Users\wicke\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\sklearn\feature_extraction\text.py:557: UserWarning: The parameter 'token_pattern' will not be used since 'analyzer' != 'word'
+  warnings.warn(
+[     63s]   [c4] vectorised in 29s (vocab 129261)
+[     63s]     [c4] src2 'France': 12987 x 35192 in 0s
+[     63s]     [c4] src2 'India': 40942 x 115282 in 0s
+[     63s]     [c4] src2 'US': 33252 x 94070 in 0s
+[     63s]     [c4] src3 'France': 12987 x 36675 in 0s
+[     63s]     [c4] src3 'India': 40942 x 120610 in 0s
+[     63s]     [c4] src3 'US': 33252 x 97023 in 0s
+[     74s]   [ph] vectorised in 11s (vocab 113404)
+[     75s]     [ph] src2 'France': 12987 x 35192 in 0s
+[     75s]     [ph] src2 'India': 40942 x 115282 in 0s
+[     75s]     [ph] src2 'US': 33252 x 94070 in 0s
+[     75s]     [ph] src3 'France': 12987 x 36675 in 0s
+[     75s]     [ph] src3 'India': 40942 x 120610 in 0s
+[     75s]     [ph] src3 'US': 33252 x 97023 in 0s
+[     80s]   [nm] vectorised in 5s (vocab 52962)
+[     80s]     [nm] src2 'France': 12987 x 35192 in 0s
+[     81s]     [nm] src2 'India': 40942 x 115282 in 0s
+[     81s]     [nm] src2 'US': 33252 x 94070 in 0s
+[     81s]     [nm] src3 'France': 12987 x 36675 in 0s
+[     81s]     [nm] src3 'India': 40942 x 120610 in 0s
+[     81s]     [nm] src3 'US': 33252 x 97023 in 0s
+[    199s]   features 3652387/3652387
+[    206s]   stage-1 predicted 3652387/3652387
+[    215s] test: 16709 matched pairs written
+[     62s] sampling: 1800531 pairs -> 1032101 training rows (pos 150962, hard neg 625079, easy kept 256060)
+[     63s] binned 1032101 rows in 1s
+[     76s]   fold 0: best_iter=206 (early-stop logloss on sampled rows 0.01125)
+[     91s]   fold 1: best_iter=188 (early-stop logloss on sampled rows 0.01209)
+[    108s]   fold 2: best_iter=194 (early-stop logloss on sampled rows 0.01199)
+[    125s]   fold 3: best_iter=182 (early-stop logloss on sampled rows 0.01170)
+[    139s]   fold 4: best_iter=202 (early-stop logloss on sampled rows 0.01201)
+[    139s] fold models saved; best iterations [206, 188, 194, 182, 202] (run 8: [1787, 2165, 2569, 2317, 2751])
+[    11s]   expand train India: d 141179 hits, c 963861 hits from 88535 anchors
+[    21s]   expand train US: d 376480 hits, c 1445011 hits from 131690 anchors
+[    21s] expand train: 928044 round-2 pairs = 21.1 per S1
+[     79s]   features 358789/358789
+[    80s]   r2feats train India: 358789 pairs
+[    113s]   features 569255/569255
+[   113s]   r2feats train US: 569255 pairs
+[   115s] r2feats train: done; stage-1 P >= 0.001 on 0.049 of round-2 pairs
+[     1s] union train all: 2728575 pairs (928044 round 2); stage-2 rows 214435 (45846 round 2)
+[    20s]   context / sibling / name-frequency features done
+[    24s]   s2 fold 0: best_iter=106 logloss=0.04483
+[    28s]   s2 fold 1: best_iter=113 logloss=0.04513
+[    32s]   s2 fold 2: best_iter=101 logloss=0.04722
+[    36s]   s2 fold 3: best_iter=108 logloss=0.04734
+[    39s]   s2 fold 4: best_iter=104 logloss=0.04720
+[    43s] RESULT run 10 full40: 0.98625 (tf 0.389 ta 0.788)
+[    45s] RESULT run 10 nested15: 0.98677 (tf 0.423 ta 0.804)
+[    47s] RESULT run 10 India: 0.98386 (tf 0.740 ta 0.770)
+[    49s] RESULT run 10 US: 0.98775 (tf 0.387 ta 0.835)
+[    49s]   run 9 reference: full40 0.97233 / nested15 0.97232 / India 0.96246 / US 0.97871
+[    49s] union candidate recall 0.9956 (run 9: 0.9717); candidates/S1 61.9
+[    52s] saved r10_stage2_model.txt; top features: p1, p1_rec_max, p1_s1_gap, p1_rec_best_other, p1_s1_max, rank_na, sib_pmass, sib_num_jacc_max, sib_addr_max, p1_rec_sum, nf_s1_same_rcore, nf_rec_same_rcore, sim_na, sib_name_wmean, p1_s1_best_other
+[     7s]   expand test France: d 36914 hits, c 642650 hits from 64935 anchors
+[    14s]   expand test India: d 165694 hits, c 2202980 hits from 204710 anchors
+[    18s]   expand test US: d 228369 hits, c 1811915 hits from 166260 anchors
+[    18s] expand test: 2467119 round-2 pairs = 28.3 per S1
+[     55s]   features 287005/287005
+[    56s]   r2feats test France: 287005 pairs
+[     98s]   features 1136456/1136456
+[    99s]   r2feats test India: 1136456 pairs
+[    133s]   features 1043658/1043658
+[   134s]   r2feats test US: 1043658 pairs
+[   138s] r2feats test: done; stage-1 P >= 0.001 on 0.012 of round-2 pairs
+[     2s] union test France: 790828 pairs (287005 round 2); stage-2 rows 21534 (5362 round 2)
+[     4s]   context / sibling / name-frequency features done
+[     44s]   features 16172/16172
+[    44s]   round-1 stage-1 features test France: 16172 rows
+[    44s]   s2test France scored
+[    46s] union test India: 2881763 pairs (1136456 round 2); stage-2 rows 40833 (18990 round 2)
+[    51s]   context / sibling / name-frequency features done
+[     96s]   features 21843/21843
+[    96s]   round-1 stage-1 features test India: 21843 rows
+[    96s]   s2test India scored
+[    99s] union test US: 2446915 pairs (1043658 round 2); stage-2 rows 21003 (6261 round 2)
+[   102s]   context / sibling / name-frequency features done
+[    144s]   features 14742/14742
+[   144s]   round-1 stage-1 features test US: 14742 rows
+[   144s]   s2test US scored
+[   161s] s2test: {'t_first': 0.38901683508133406, 't_add': 0.7881788254270745, 'pred_pairs': 17300, 'candidates_per_s1': 70.19311547240798, 'pred_singleton_fraction_by_country': {'France': 0.7975667975667976, 'India': 0.8249230618924333, 'US': 0.8253037411283531}}
+ML Challenge 2026 — submission validator
+  test dir: dataset_smoke5/test
+  required S1 entities: 87181
+  matching_results.tsv: 87181 rows (71575 empty, 15606 non-empty).
+  candidate_pairs.tsv: 87181 rows (0 empty, 87181 non-empty).
+
+WARNING: ID-existence check is OFF (the default) — not checking that matched/candidate IDs exist in the test set. Every other rule is still checked. Re-run with --check-ids to enable it (needs test_source2/3.tsv; uses more memory). A nonexistent ID only lowers your score, never rejects your submission.
+PASS — no blocking issues found. Safe to submit.
+final outputs: runs/smoke/runs/v4/{matching_results,candidate_pairs}.tsv
+SMOKE-EXIT 0

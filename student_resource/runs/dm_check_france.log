@@ -1,0 +1,5 @@
+[    73s] hash draw: 1.0000 of test S1s (target fraction 1.0)
+[    330s]   features 1773379/1773379
+[   390s]   France: stage 1 re-scored 1773379 round-1 + 260130 round-2 pairs
+[   518s]   France: stage 2 re-scored 1204112 rows
+[   804s] CHECK France: 14199649 pairs, matched 14199649; |P - P_run10| max 0.00e+00, mean 0.00e+00; pairs crossing t_add 0

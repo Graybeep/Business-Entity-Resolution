@@ -39,7 +39,10 @@ from stage2_sibling import P_MIN, sibling_features  # noqa: E402
 from training_scaled import load_rows  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
-CACHE = os.path.join(ROOT, "cache")
+# ER_DATA / ER_CACHE / ER_OUT override the default locations (used by the empty-cache smoke test)
+DATA = os.environ.get("ER_DATA", os.path.join(ROOT, "dataset"))
+CACHE = os.environ.get("ER_CACHE", os.path.join(ROOT, "cache"))
+OUT_ROOT = os.environ.get("ER_OUT", ROOT)
 D_K, C_TOP, C_NB = 50, 5, 10          # pass d top-k; sibling expansion anchors per S1 x neighbours
 R2_MIN = 1e-3                          # round-2 pairs re-scored by stage 2
 CHUNK = 2_000_000
@@ -152,7 +155,7 @@ def expand(split, threads=14):
 def r2feats(split):
     """Stage-1 features for round-2 pairs (context over round 1 + round 2, per country; on-disk
     memmap) and their stage-1 P (train: out-of-fold by the S1's fold; test: run-8 refit), chunked."""
-    data = load_split(os.path.join(ROOT, "dataset"), split, CACHE)
+    data = load_split(DATA, split, CACHE)
     stats = TextStats(seed=PL.CFG["seed"]).fit([data["source1"], data["source2"], data["source3"]])
     r2 = pd.read_parquet(cp(f"{split}_r2_pairs.parquet"))
     r1 = pd.read_parquet(os.path.join(CACHE, "train_cands_f0.4.parquet" if split == "train" else "test_cands.parquet"))
@@ -227,7 +230,7 @@ def name_freq(data, d):
 
 def label(r2, data):
     """Ground-truth label of training pairs r2 (s1_pos, src, r_pos)."""
-    gt = pd.read_csv(os.path.join(ROOT, "dataset", "train", "train_ground_truth.tsv"), sep="\t", dtype=str,
+    gt = pd.read_csv(os.path.join(DATA, "train", "train_ground_truth.tsv"), sep="\t", dtype=str,
                      keep_default_na=False)
     lists = gt.matched_entity_ids.str.split(",")
     pairs = pd.DataFrame({"s1": np.repeat(gt.source1_entity_id.values, lists.map(len).values),
@@ -272,13 +275,15 @@ def stage1_rows(split, data, g1, g2):
     return X
 
 
-def union_inputs(split, data, country=None):
+def union_inputs(split, data, country=None, p1_all=None, p2_all=None, drop=()):
     """Stage-2 rows of the union (round-1 P >= P_MIN, round-2 P >= R2_MIN) and their stage-2 matrix,
     optionally restricted to one country's S1s.  Returns (u, rows, X, names); u holds every union
     pair of the selection, rows index the re-scored ones (sorted: round 1 first, then round 2)."""
     c1, p1, _ = round1(split)
     r2 = pd.read_parquet(cp(f"{split}_r2_pairs.parquet"))
     p2 = np.load(cp(f"{split}_r2_p1.npy"))
+    if p1_all is not None:          # ablation: stage-1 scores of another model (same row order)
+        p1, p2 = np.asarray(p1_all, np.float32), np.asarray(p2_all, np.float32)
     s1_cty = data["source1"].country.values
     i1 = np.arange(len(c1)) if country is None else np.flatnonzero(s1_cty[c1.s1_pos.values] == country)
     i2 = np.arange(len(r2)) if country is None else np.flatnonzero(s1_cty[r2.s1_pos.values] == country)
@@ -313,6 +318,9 @@ def union_inputs(split, data, country=None):
     X = np.hstack([X1, ctxv, sibf.values, nf.values, d[["is_round2"]].values]).astype(np.float32)
     del X1, ctxv
     names = stage1_names() + ctx_cols + list(sibf.columns) + list(nf.columns) + ["is_round2"]
+    if drop:
+        keep = [i for i, n in enumerate(names) if n not in set(drop)]
+        X, names = X[:, keep], [names[i] for i in keep]
     return u, rows, X, names
 
 
@@ -321,7 +329,7 @@ def union_inputs(split, data, country=None):
 # ---------------------------------------------------------------------------
 def true_counts(data):
     """True match count per train S1."""
-    gt = pd.read_csv(os.path.join(ROOT, "dataset", "train", "train_ground_truth.tsv"), sep="\t", dtype=str,
+    gt = pd.read_csv(os.path.join(DATA, "train", "train_ground_truth.tsv"), sep="\t", dtype=str,
                      keep_default_na=False)
     cnt = gt.matched_entity_ids.map(lambda x: len([i for i in x.split(",") if i]))
     return pd.Series(cnt.values, index=gt.source1_entity_id.values).reindex(
@@ -342,7 +350,7 @@ def fast_score(u, p, tca, mask):
 
 def s2train():
     """Stage-2 CV on the train union (5-fold GroupKFold by S1), fixed-grid thresholds, refit, save."""
-    data = load_split(os.path.join(ROOT, "dataset"), "train", CACHE)
+    data = load_split(DATA, "train", CACHE)
     u, rows, X, names = union_inputs("train", data)
     y = u.y.values[rows]
     g = u.s1_pos.values[rows]
@@ -389,7 +397,7 @@ def s2test(out="runs/v4smoke" if SMOKE else "runs/v4"):
     write both TSVs (candidates = the full union that was scored)."""
     with open(cp("train_result.json")) as fh:
         thr = json.load(fh)["full40"]
-    data = load_split(os.path.join(ROOT, "dataset"), "test", CACHE)
+    data = load_split(DATA, "test", CACHE)
     model = lgb.Booster(model_file=cp("stage2_model.txt"))
     parts = []
     for c_ in sorted(x for x in data["source1"].country.unique() if x):
@@ -408,10 +416,10 @@ def s2test(out="runs/v4smoke" if SMOKE else "runs/v4"):
     s1 = data["source1"]
     ids = {k: np.asarray(data[f"source{k}"].entity_id.values, dtype=object) for k in (2, 3)}
     s1_ids = np.asarray(s1.entity_id.values, dtype=object)
-    os.makedirs(os.path.join(ROOT, out), exist_ok=True)
-    PL.write_lists(os.path.join(ROOT, out, "candidate_pairs.tsv"), s1_ids, s1_pos, src, r_pos, ids[2], ids[3],
+    os.makedirs(os.path.join(OUT_ROOT, out), exist_ok=True)
+    PL.write_lists(os.path.join(OUT_ROOT, out, "candidate_pairs.tsv"), s1_ids, s1_pos, src, r_pos, ids[2], ids[3],
                    "candidate_entity_ids")
-    PL.write_lists(os.path.join(ROOT, out, "matching_results.tsv"), s1_ids, s1_pos[keep], src[keep], r_pos[keep],
+    PL.write_lists(os.path.join(OUT_ROOT, out, "matching_results.tsv"), s1_ids, s1_pos[keep], src[keep], r_pos[keep],
                    ids[2], ids[3], "matched_entity_ids")
     cty = np.asarray(s1.country.values, dtype=object)
     kept = s1_pos[keep]
@@ -419,7 +427,7 @@ def s2test(out="runs/v4smoke" if SMOKE else "runs/v4"):
             "candidates_per_s1": len(u) / len(s1),
             "pred_singleton_fraction_by_country": {k: float(1 - len(np.unique(kept[cty[kept] == k])) / (cty == k).sum())
                                                    for k in np.unique(cty)}}
-    with open(os.path.join(ROOT, out, "test_summary.json"), "w") as fh:
+    with open(os.path.join(OUT_ROOT, out, "test_summary.json"), "w") as fh:
         json.dump(summ, fh, indent=2)
     log(f"s2test: {summ}")
 

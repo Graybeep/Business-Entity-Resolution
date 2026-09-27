@@ -17,3 +17,6 @@ student_resource/runs/**/*.parquet
 student_resource/runs/**/*.npy
 student_resource/submissions/*.tsv
 !student_resource/submissions/log.tsv
+# smoke-test data / cache (regenerable)
+student_resource/dataset_smoke5/
+student_resource/cache_smoke/

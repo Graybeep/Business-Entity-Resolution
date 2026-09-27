@@ -1,0 +1,14 @@
+[    45s]     d) US done
+[    56s]     d) India done
+[   335s]     c) US: 298810 anchors
+[   507s]     c) India: 197440 anchors
+[   508s]   c) anchors=oof   top5 x 10 nbrs: recall 0.9711 -> 0.9826 (+0.0115), +11.4 cands/S1 | with d50: 0.9842, +16.4 cands/S1
+[   707s]     c) US: 179286 anchors
+[   833s]     c) India: 118464 anchors
+[   834s]   c) anchors=block top3 x 5 nbrs: recall 0.9711 -> 0.9738 (+0.0026), +5.1 cands/S1 | with d50: 0.9761, +10.5 cands/S1
+[  1147s]     c) US: 298810 anchors
+[  1402s]     c) India: 197440 anchors
+[  1403s]   c) anchors=block top5 x 10 nbrs: recall 0.9711 -> 0.9764 (+0.0053), +20.6 cands/S1 | with d50: 0.9780, +25.6 cands/S1
+[  1887s]     c) US: 597620 anchors
+[  2182s]     c) India: 394880 anchors
+[  2183s]   c) anchors=oof   top10 x 10 nbrs: recall 0.9711 -> 0.9834 (+0.0123), +29.2 cands/S1 | with d50: 0.9847, +33.8 cands/S1
